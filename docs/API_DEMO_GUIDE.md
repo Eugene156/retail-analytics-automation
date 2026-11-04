@@ -97,3 +97,47 @@ client, safe smoke assertions against the live API and prepared case reads.
 Optional mutation requires its own authorization. These are not CI deployment
 or live integration claims. Publication safety must be checked again before
 including any new screenshots or real saved responses.
+
+## CI and offline checks
+
+[GitHub Actions configuration](../.github/workflows/ci.yml) uses Python 3.12,
+read-only repository permissions and a five-minute timeout. Push, pull-request
+and manual triggers run publication/static checks and six selected pytest modules.
+They cover recovery-policy models, workflow helpers, publication privacy, offline
+AI evaluation, API artifacts and synthetic HTTP logging. Live inference, service
+integration and deployment are excluded; automatic CD is not implemented.
+
+The release verification on 4 November 2026 recorded 56 local pytest passes and a
+successful hosted run. Use the [workflow history](https://github.com/Eugene156/retail-analytics-automation/actions/workflows/ci.yml)
+for subsequent commit results; the historical count does not certify future edits.
+
+Commands matching the configured CI steps, plus optional offline evidence replay:
+
+```sh
+python -m pip install -r config/ci-requirements.txt
+python scripts/check_publication.py
+python -m pytest -q tests/test_wp4_recovery_design.py tests/test_wp3_n8n_local.py tests/test_publication_security.py tests/test_ai_evaluation.py tests/test_api_docs.py tests/test_observability.py
+python scripts/evaluate_ai_demo.py
+```
+
+## Structured HTTP logging
+
+The main and P2 FastAPI adapters emit bounded JSON completion events with UTC time,
+service, server-generated http_request_id, allowlisted route, method, status,
+duration and outcome. X-Request-ID connects the response to the local event.
+Headers, bodies, query strings, credentials and raw exception text are omitted;
+incoming correlation IDs are not trusted. Approval/domain and n8n execution IDs
+are separate identifiers, not a propagated distributed trace. MCP, Ollama and
+the approval service do not share this correlation middleware.
+
+A synthetic event requires no running service or database:
+
+```sh
+python -m api.observability --demo
+```
+
+Historical live correlation evidence is in the
+[P6 receipt](../evidence/p6_live_validation.json). This logger does not make raw
+execution history or framework logs safe to publish. The earlier F2 presentation
+and query-boundary checks were separate targeted tests, not additional portable
+CI coverage.

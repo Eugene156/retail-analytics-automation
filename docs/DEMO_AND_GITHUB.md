@@ -46,6 +46,30 @@ No quotations, source hashes, embeddings, model outputs or acceptance receipts
 were regenerated for this documentation repair. A future corpus revision requires
 separately scoped versioning and evaluation; guards must not be relaxed.
 
+## Local demonstration addresses
+
+The interactive website is local-only. These addresses are for an **already
+provisioned owner environment**; they are not public demo links. Use the sidebar
+or enter the relevant address:
+
+| Page | Local URL |
+| --- | --- |
+| Overview | `http://127.0.0.1:18090/overview` |
+| Human Approval | `http://127.0.0.1:18082/portal/f2` |
+| AI Agent | `http://127.0.0.1:18090/overview#ai-agent` |
+| MCP Analytics | `http://127.0.0.1:18090/overview#mcp-analytics` |
+| Knowledge Assistant | `http://127.0.0.1:18090/overview#knowledge-assistant` |
+| API & CI | `http://127.0.0.1:18090/overview#api-ci` |
+| n8n workflow inspection | `http://127.0.0.1:15690` |
+
+Select scenarios to inspect saved answers and expand tool/source evidence.
+Human Approval requires manual owner sign-in; new Create/Approve/Reject actions
+require owner authorization and publish only to the isolated local target.
+Keep credentials, tokens and raw execution exports out of recordings and commits.
+
+P2 API and P3 MCP use detached processes that may need restoration after their
+containers stop. Run local model work sequentially on memory-limited machines.
+
 ## Workflow portability and setup
 
 [Published workflow exports](../workflows/README.md) reference bounded APIs,

@@ -94,7 +94,7 @@ The KPI dictionary and data contract remain byte-pinned historical RAG sources.
 Their [public clarification](DEMO_AND_GITHUB.md#pinned-policy-documents-and-current-status)
 separates earlier status prose from the completed system without rewriting evidence.
 
-## User stories and acceptance traceability
+## User stories
 
 Stories state user needs; the delivery column limits what is actually established.
 Original AC/AX references point to definitions, not blanket acceptance of all gates.

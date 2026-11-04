@@ -22,6 +22,48 @@ connectors, OAuth, meaningful external MCP, BI, queueing and heavy observability
 are not claimed as implemented. Publishing this repository is not a product
 GitHub connector. No roadmap entry authorizes new implementation.
 
+## Architecture and engineering boundaries
+
+```mermaid
+flowchart LR
+    User[Local demo operator] --> Web[FastAPI + HTML / CSS / vanilla JS]
+    Web --> Evidence[Reviewed historical evidence: F3-F5]
+    User --> H[Protected Human Approval portal: F2]
+    H --> Gate[Server-side HMAC + durable admission ledger]
+    Gate --> N[n8n parent / guarded report core]
+    N --> API[Python FastAPI: reports and read-only tools]
+    API --> PG[(PostgreSQL: facts / reports / approval state)]
+    H --> PG
+    H --> Outbox[Decision / publication outbox]
+    Outbox --> N
+    N --> L[Guarded local publication storage]
+    N --> MCP[MCP Client / loopback MCP Server]
+    MCP --> API
+    N --> O[Ollama: qwen3 chat / all-minilm embeddings]
+    N --> RAG[(Separate PostgreSQL + pgvector)]
+```
+
+This diagram covers the existing local workflows as well as the website. Opening
+an evidence page does not traverse the live AI paths.
+
+- **Orchestration:** n8n parent/core workflows, native AI Agent, real tool calling
+  and supported MCP Client Tool. Docker Compose isolates the local demo services.
+- **Facts and contracts:** Python/FastAPI, PostgreSQL and SQL NUMERIC arithmetic.
+  Tools expose bounded read-only analytics; no arbitrary SQL, shell or URL access.
+- **Human control:** owner sessions, Host/Origin/CSRF guards, HMAC-signed creation
+  admission and a PostgreSQL nonce/operation ledger. Creation grants no approval
+  authority. Approval binds report version/hash, reviewer, target and expiry;
+  outbox delivery and receipts guard publication and duplicates.
+- **RAG:** chunked KPI/business-policy documents, real local embeddings and
+  pgvector similarity search before the agent. Source IDs are validated; exact
+  quotations are assembled from retrieved chunks rather than copied by the model.
+- **Engineering:** structured outputs and evidence guards, offline AI evaluation,
+  GitHub Actions configuration, OpenAPI/Postman and structured HTTP logging.
+
+Models cannot approve or publish reports. Original model output and deterministic
+validated output are distinguished: required P2/P3 numeric lines come from actual
+tool responses, not unsupported model prose.
+
 ## Original technology proposals
 
 The table below preserves the original broad learning plan. Stage labels are
