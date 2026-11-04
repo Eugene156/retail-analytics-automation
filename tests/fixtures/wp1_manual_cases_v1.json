@@ -1,0 +1,19 @@
+{
+  "schema_version": "wp1-manual-cases-v1",
+  "source_file_sha256": "BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980",
+  "worksheet": "Year 2010-2011",
+  "source_time_interpretation": "naive workbook time",
+  "comparison_rule": "the same one-hour window exactly seven calendar days earlier, on the same worksheet",
+  "cases": [
+    {"case_id": "M01", "start_inclusive": "2011-05-08T15:00:00", "end_exclusive": "2011-05-08T16:00:00", "focus": "routine_sales"},
+    {"case_id": "M02", "start_inclusive": "2011-01-28T09:00:00", "end_exclusive": "2011-01-28T10:00:00", "focus": "mixed_cancellation"},
+    {"case_id": "M03", "start_inclusive": "2011-10-06T20:00:00", "end_exclusive": "2011-10-06T21:00:00", "focus": "cancellation_only"},
+    {"case_id": "M04", "start_inclusive": "2011-06-10T17:00:00", "end_exclusive": "2011-06-10T18:00:00", "focus": "missing_customer"},
+    {"case_id": "M05", "start_inclusive": "2011-02-28T14:00:00", "end_exclusive": "2011-02-28T15:00:00", "focus": "zero_price"},
+    {"case_id": "M06", "start_inclusive": "2011-06-10T10:00:00", "end_exclusive": "2011-06-10T11:00:00", "focus": "other_adjustment"},
+    {"case_id": "M07", "start_inclusive": "2011-08-12T14:00:00", "end_exclusive": "2011-08-12T15:00:00", "focus": "invalid_price"},
+    {"case_id": "M08", "start_inclusive": "2011-07-14T10:00:00", "end_exclusive": "2011-07-14T11:00:00", "focus": "mixed_exceptions"},
+    {"case_id": "M09", "start_inclusive": "2011-11-11T09:00:00", "end_exclusive": "2011-11-11T10:00:00", "focus": "higher_volume"},
+    {"case_id": "M10", "start_inclusive": "2011-01-01T00:00:00", "end_exclusive": "2011-01-01T01:00:00", "focus": "empty_window"}
+  ]
+}

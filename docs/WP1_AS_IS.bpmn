@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_AsIs" targetNamespace="https://example.local/retail-analytics-automation/bpmn">
+  <bpmn:process id="Process_AsIs" name="Illustrative manual report cycle (not observed at the historical retailer)" isExecutable="false">
+    <bpmn:documentation>A pilot scenario for the owner's manual baseline. Tasks and handoffs are assumptions until owner observation; no durations or savings are claimed. Local tools are manually operated, not retailer systems.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_AsIs">
+      <bpmn:lane id="Lane_Analyst" name="Analyst (owner role)">
+        <bpmn:flowNodeRef>A_Start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>A_Assemble</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>A_Check</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>A_Quality</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>A_Resolve</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>A_Classify</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>A_Compare</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>A_Write</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>A_Revise</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Tools" name="Local files and spreadsheet (assumed manual aids)">
+        <bpmn:flowNodeRef>A_Load</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>A_Calculate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>A_Save</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>A_End</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Reviewer" name="Reviewer (owner or consenting participant)">
+        <bpmn:flowNodeRef>A_Review</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>A_Approval</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="A_Start" name="Report period selected">
+      <bpmn:outgoing>A_Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="A_Assemble" name="Define snapshot and date range">
+      <bpmn:incoming>A_Flow_1</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="A_Load" name="Open archive working copy">
+      <bpmn:incoming>A_Flow_2</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="A_Check" name="Check completeness and row validity">
+      <bpmn:incoming>A_Flow_3</bpmn:incoming>
+      <bpmn:incoming>A_Flow_6</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="A_Quality" name="Usable data?">
+      <bpmn:incoming>A_Flow_4</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_5</bpmn:outgoing>
+      <bpmn:outgoing>A_Flow_7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="A_Resolve" name="Resolve or document quality exception">
+      <bpmn:incoming>A_Flow_5</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="A_Classify" name="Classify sales and adjustments">
+      <bpmn:incoming>A_Flow_7</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="A_Calculate" name="Calculate KPIs in spreadsheet">
+      <bpmn:incoming>A_Flow_8</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="A_Compare" name="Compare valid prior period">
+      <bpmn:incoming>A_Flow_9</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="A_Write" name="Draft report and follow-up">
+      <bpmn:incoming>A_Flow_10</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_11</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="A_Review" name="Review figures and narrative">
+      <bpmn:incoming>A_Flow_11</bpmn:incoming>
+      <bpmn:incoming>A_Flow_14</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="A_Approval" name="Accept draft?">
+      <bpmn:incoming>A_Flow_12</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_13</bpmn:outgoing>
+      <bpmn:outgoing>A_Flow_15</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="A_Revise" name="Correct report and resubmit">
+      <bpmn:incoming>A_Flow_13</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_14</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="A_Save" name="Save report and follow-up locally">
+      <bpmn:incoming>A_Flow_15</bpmn:incoming>
+      <bpmn:outgoing>A_Flow_16</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="A_End" name="Manual report stored">
+      <bpmn:incoming>A_Flow_16</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="A_Flow_1" sourceRef="A_Start" targetRef="A_Assemble"/>
+    <bpmn:sequenceFlow id="A_Flow_2" sourceRef="A_Assemble" targetRef="A_Load"/>
+    <bpmn:sequenceFlow id="A_Flow_3" sourceRef="A_Load" targetRef="A_Check"/>
+    <bpmn:sequenceFlow id="A_Flow_4" sourceRef="A_Check" targetRef="A_Quality"/>
+    <bpmn:sequenceFlow id="A_Flow_5" sourceRef="A_Quality" targetRef="A_Resolve" name="No"/>
+    <bpmn:sequenceFlow id="A_Flow_6" sourceRef="A_Resolve" targetRef="A_Check"/>
+    <bpmn:sequenceFlow id="A_Flow_7" sourceRef="A_Quality" targetRef="A_Classify" name="Yes"/>
+    <bpmn:sequenceFlow id="A_Flow_8" sourceRef="A_Classify" targetRef="A_Calculate"/>
+    <bpmn:sequenceFlow id="A_Flow_9" sourceRef="A_Calculate" targetRef="A_Compare"/>
+    <bpmn:sequenceFlow id="A_Flow_10" sourceRef="A_Compare" targetRef="A_Write"/>
+    <bpmn:sequenceFlow id="A_Flow_11" sourceRef="A_Write" targetRef="A_Review"/>
+    <bpmn:sequenceFlow id="A_Flow_12" sourceRef="A_Review" targetRef="A_Approval"/>
+    <bpmn:sequenceFlow id="A_Flow_13" sourceRef="A_Approval" targetRef="A_Revise" name="No"/>
+    <bpmn:sequenceFlow id="A_Flow_14" sourceRef="A_Revise" targetRef="A_Review"/>
+    <bpmn:sequenceFlow id="A_Flow_15" sourceRef="A_Approval" targetRef="A_Save" name="Yes"/>
+    <bpmn:sequenceFlow id="A_Flow_16" sourceRef="A_Save" targetRef="A_End"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_AsIs">
+    <bpmndi:BPMNPlane id="Plane_AsIs" bpmnElement="Process_AsIs">
+      <bpmndi:BPMNShape id="Lane_Analyst_di" bpmnElement="Lane_Analyst" isHorizontal="true"><dc:Bounds x="40" y="60" width="2110" height="230"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Tools_di" bpmnElement="Lane_Tools" isHorizontal="true"><dc:Bounds x="40" y="290" width="2110" height="200"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Reviewer_di" bpmnElement="Lane_Reviewer" isHorizontal="true"><dc:Bounds x="40" y="490" width="2110" height="210"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Start_di" bpmnElement="A_Start"><dc:Bounds x="100" y="155" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Assemble_di" bpmnElement="A_Assemble"><dc:Bounds x="190" y="130" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Load_di" bpmnElement="A_Load"><dc:Bounds x="370" y="345" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Check_di" bpmnElement="A_Check"><dc:Bounds x="550" y="130" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Quality_di" bpmnElement="A_Quality"><dc:Bounds x="730" y="145" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Resolve_di" bpmnElement="A_Resolve"><dc:Bounds x="730" y="210" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Classify_di" bpmnElement="A_Classify"><dc:Bounds x="850" y="130" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Calculate_di" bpmnElement="A_Calculate"><dc:Bounds x="1030" y="345" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Compare_di" bpmnElement="A_Compare"><dc:Bounds x="1210" y="130" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Write_di" bpmnElement="A_Write"><dc:Bounds x="1390" y="130" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Review_di" bpmnElement="A_Review"><dc:Bounds x="1570" y="550" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Approval_di" bpmnElement="A_Approval"><dc:Bounds x="1750" y="565" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Revise_di" bpmnElement="A_Revise"><dc:Bounds x="1750" y="130" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_Save_di" bpmnElement="A_Save"><dc:Bounds x="1880" y="345" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A_End_di" bpmnElement="A_End"><dc:Bounds x="2050" y="367" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="A_Flow_1_di" bpmnElement="A_Flow_1"><di:waypoint x="136" y="173"/><di:waypoint x="190" y="170"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_2_di" bpmnElement="A_Flow_2"><di:waypoint x="260" y="210"/><di:waypoint x="440" y="345"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_3_di" bpmnElement="A_Flow_3"><di:waypoint x="440" y="345"/><di:waypoint x="620" y="210"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_4_di" bpmnElement="A_Flow_4"><di:waypoint x="690" y="170"/><di:waypoint x="730" y="170"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_5_di" bpmnElement="A_Flow_5"><di:waypoint x="755" y="195"/><di:waypoint x="800" y="210"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_6_di" bpmnElement="A_Flow_6"><di:waypoint x="800" y="250"/><di:waypoint x="720" y="275"/><di:waypoint x="530" y="275"/><di:waypoint x="620" y="170"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_7_di" bpmnElement="A_Flow_7"><di:waypoint x="780" y="170"/><di:waypoint x="850" y="170"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_8_di" bpmnElement="A_Flow_8"><di:waypoint x="920" y="210"/><di:waypoint x="1100" y="345"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_9_di" bpmnElement="A_Flow_9"><di:waypoint x="1100" y="345"/><di:waypoint x="1280" y="210"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_10_di" bpmnElement="A_Flow_10"><di:waypoint x="1350" y="170"/><di:waypoint x="1390" y="170"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_11_di" bpmnElement="A_Flow_11"><di:waypoint x="1460" y="210"/><di:waypoint x="1640" y="550"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_12_di" bpmnElement="A_Flow_12"><di:waypoint x="1710" y="590"/><di:waypoint x="1750" y="590"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_13_di" bpmnElement="A_Flow_13"><di:waypoint x="1775" y="565"/><di:waypoint x="1820" y="210"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_14_di" bpmnElement="A_Flow_14"><di:waypoint x="1820" y="210"/><di:waypoint x="1640" y="550"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_15_di" bpmnElement="A_Flow_15"><di:waypoint x="1775" y="565"/><di:waypoint x="1950" y="425"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Flow_16_di" bpmnElement="A_Flow_16"><di:waypoint x="2020" y="385"/><di:waypoint x="2050" y="385"/></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

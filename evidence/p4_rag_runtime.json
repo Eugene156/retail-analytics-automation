@@ -1,0 +1,406 @@
+{
+  "executions": [
+    {
+      "id": 79,
+      "workflow": "p4-rag-demo-v1",
+      "status": "success"
+    },
+    {
+      "id": 80,
+      "workflow": "p4-rag-core-v1",
+      "status": "success",
+      "question": "How is net recorded sales calculated and what does it exclude?",
+      "query_embedding_dimensions": 384,
+      "semantic_matches": [
+        {
+          "chunk_id": "kpi-dictionary#0",
+          "similarity": 0.6166176155165689
+        },
+        {
+          "chunk_id": "data-contract#1",
+          "similarity": 0.5601020097884553
+        },
+        {
+          "chunk_id": "data-contract#0",
+          "similarity": 0.5185886356691076
+        },
+        {
+          "chunk_id": "kpi-dictionary#1",
+          "similarity": 0.4841363084722562
+        }
+      ],
+      "answer": "Net recorded sales equals recorded sales value minus recorded cancellation value. Other adjustments are excluded from net recorded sales and disclosed separately.",
+      "citations": [
+        "kpi-dictionary#0"
+      ],
+      "source_ids": [
+        "kpi-dictionary"
+      ],
+      "answer_status": "PASS",
+      "retrieved_chunks": [
+        {
+          "text": "| Recorded sales value | Sum(quantity * unit_price) over accepted sale rows | Revenue proxy; not audited revenue or profit |\n\n| Recorded cancellation value | Negative sum(quantity * unit_price) over accepted cancellation rows, reported as a positive magnitude | Recorded-date cancellation amount, not a physical-return rate |\n\n| Net recorded sales | Recorded sales value minus recorded cancellation value | Other adjustments excluded and disclosed;",
+          "chunk_id": "kpi-dictionary#0",
+          "source_id": "kpi-dictionary",
+          "similarity": 0.6166176155165689,
+          "source_path": "docs/KPI_DICTIONARY.md",
+          "document_sha256": "c4bb60196f2c098c41a35ca045d5ee280adbf18609ffaf1c5341aa2a81319fb3",
+          "embedding_model": "all-minilm:22m"
+        },
+        {
+          "text": "; excluded from the initial net-sales formula and disclosed |\n\n| Invalid | Invalid/missing invoice or time, non-numeric quantity/price, negative price, or missing essential product key | Quarantined or specifically excluded with an explicit reason |\n\n| Customer missing | Otherwise valid row with null customer_id | Retained for sales; excluded only from customer-level metrics |\n\nReport counts and monetary impact where calculable for every",
+          "chunk_id": "data-contract#1",
+          "source_id": "data-contract",
+          "similarity": 0.5601020097884553,
+          "source_path": "docs/DATA_CONTRACT.md",
+          "document_sha256": "0acc567b0b15c32ce8be6bea9f05d4577d1c6c68710f7c534526caeafa960707",
+          "embedding_model": "all-minilm:22m"
+        },
+        {
+          "text": "| Sale | Non-cancellation invoice, quantity > 0, finite price >= 0, valid required keys/time | Included in sale aggregates |\n\n| Cancellation | Invoice begins with C, quantity < 0, finite price >= 0, valid keys/time | Included as negative cancellation value |\n\n| Other adjustment | Negative quantity without C, or contradictory cancellation/quantity signs | Separate adjustment bucket; excluded from the initial net-sales formula and disclosed |\n\n|",
+          "chunk_id": "data-contract#0",
+          "source_id": "data-contract",
+          "similarity": 0.5185886356691076,
+          "source_path": "docs/DATA_CONTRACT.md",
+          "document_sha256": "0acc567b0b15c32ce8be6bea9f05d4577d1c6c68710f7c534526caeafa960707",
+          "embedding_model": "all-minilm:22m"
+        },
+        {
+          "text": "d cancellation value | Other adjustments excluded and disclosed; not cash flow |\n\n| Average sales invoice value | Recorded sales value / sales invoice count | Null if denominator is zero; report segment effects |\n\n| Active identified customers | Distinct non-null customer IDs on accepted sale rows | Anonymous/unidentified sales are separately counted |\n\n| Customer coverage | Accepted sale rows with a customer ID / all accepted sale rows |",
+          "chunk_id": "kpi-dictionary#1",
+          "source_id": "kpi-dictionary",
+          "similarity": 0.4841363084722562,
+          "source_path": "docs/KPI_DICTIONARY.md",
+          "document_sha256": "c4bb60196f2c098c41a35ca045d5ee280adbf18609ffaf1c5341aa2a81319fb3",
+          "embedding_model": "all-minilm:22m"
+        }
+      ],
+      "tool_calls": [],
+      "model_response": {
+        "answer": [
+          "Net recorded sales equals recorded sales value minus recorded cancellation value.",
+          "Other adjustments are excluded from net recorded sales and disclosed separately."
+        ],
+        "source_ids": [
+          "kpi-dictionary"
+        ]
+      },
+      "quotes": [
+        {
+          "source_id": "kpi-dictionary",
+          "chunk_id": "kpi-dictionary#0",
+          "source_path": "docs/KPI_DICTIONARY.md",
+          "text": "| Recorded sales value | Sum(quantity * unit_price) over accepted sale rows | Revenue proxy; not audited revenue or profit |\n\n| Recorded cancellation value | Negative sum(quantity * unit_price) over accepted cancellation rows, reported as a positive magnitude | Recorded-date cancellation amount, not a physical-return rate |\n\n| Net recorded sales | Recorded sales value minus recorded cancellation value | Other adjustments excluded and disclosed;",
+          "url": "http://127.0.0.1:15690/workflow/p4-rag-core-v1/executions/80"
+        }
+      ],
+      "validated_rule_ids": [
+        "net",
+        "adjustments"
+      ],
+      "actual_model_context_verified": true,
+      "required_schema_coverage_verified": true,
+      "content_source_validation": "PASS",
+      "direct_context_prompt_verified": true
+    },
+    {
+      "id": 81,
+      "workflow": "p4-rag-demo-v1",
+      "status": "success"
+    },
+    {
+      "id": 82,
+      "workflow": "p4-rag-core-v1",
+      "status": "success",
+      "question": "Do recorded cancellations count as data quality errors or prove physical returns?",
+      "query_embedding_dimensions": 384,
+      "semantic_matches": [
+        {
+          "chunk_id": "kpi-dictionary#0",
+          "similarity": 0.5292740587049133
+        },
+        {
+          "chunk_id": "kpi-dictionary#1",
+          "similarity": 0.4428164890786084
+        },
+        {
+          "chunk_id": "data-contract#2",
+          "similarity": 0.43574418169398743
+        },
+        {
+          "chunk_id": "data-contract#1",
+          "similarity": 0.3202601873797193
+        }
+      ],
+      "answer": "Accepted cancellation rows are counted separately from invalid data-quality rows. A C invoice indicates cancellation but does not prove a physical return, completed refund, or reason for cancellation.",
+      "citations": [
+        "kpi-dictionary#0",
+        "data-contract#1",
+        "data-contract#2"
+      ],
+      "source_ids": [
+        "kpi-dictionary",
+        "data-contract"
+      ],
+      "answer_status": "PASS",
+      "retrieved_chunks": [
+        {
+          "text": "| Recorded sales value | Sum(quantity * unit_price) over accepted sale rows | Revenue proxy; not audited revenue or profit |\n\n| Recorded cancellation value | Negative sum(quantity * unit_price) over accepted cancellation rows, reported as a positive magnitude | Recorded-date cancellation amount, not a physical-return rate |\n\n| Net recorded sales | Recorded sales value minus recorded cancellation value | Other adjustments excluded and disclosed;",
+          "chunk_id": "kpi-dictionary#0",
+          "source_id": "kpi-dictionary",
+          "similarity": 0.5292740587049133,
+          "source_path": "docs/KPI_DICTIONARY.md",
+          "document_sha256": "c4bb60196f2c098c41a35ca045d5ee280adbf18609ffaf1c5341aa2a81319fb3",
+          "embedding_model": "all-minilm:22m"
+        },
+        {
+          "text": "d cancellation value | Other adjustments excluded and disclosed; not cash flow |\n\n| Average sales invoice value | Recorded sales value / sales invoice count | Null if denominator is zero; report segment effects |\n\n| Active identified customers | Distinct non-null customer IDs on accepted sale rows | Anonymous/unidentified sales are separately counted |\n\n| Customer coverage | Accepted sale rows with a customer ID / all accepted sale rows |",
+          "chunk_id": "kpi-dictionary#1",
+          "source_id": "kpi-dictionary",
+          "similarity": 0.4428164890786084,
+          "source_path": "docs/KPI_DICTIONARY.md",
+          "document_sha256": "c4bb60196f2c098c41a35ca045d5ee280adbf18609ffaf1c5341aa2a81319fb3",
+          "embedding_model": "all-minilm:22m"
+        },
+        {
+          "text": "|\n\nReport counts and monetary impact where calculable for every exclusion. A C invoice indicates cancellation in the source dictionary; it is not proof of a physical product return, completed refund, or why a customer cancelled.",
+          "chunk_id": "data-contract#2",
+          "source_id": "data-contract",
+          "similarity": 0.43574418169398743,
+          "source_path": "docs/DATA_CONTRACT.md",
+          "document_sha256": "0acc567b0b15c32ce8be6bea9f05d4577d1c6c68710f7c534526caeafa960707",
+          "embedding_model": "all-minilm:22m"
+        },
+        {
+          "text": "; excluded from the initial net-sales formula and disclosed |\n\n| Invalid | Invalid/missing invoice or time, non-numeric quantity/price, negative price, or missing essential product key | Quarantined or specifically excluded with an explicit reason |\n\n| Customer missing | Otherwise valid row with null customer_id | Retained for sales; excluded only from customer-level metrics |\n\nReport counts and monetary impact where calculable for every",
+          "chunk_id": "data-contract#1",
+          "source_id": "data-contract",
+          "similarity": 0.3202601873797193,
+          "source_path": "docs/DATA_CONTRACT.md",
+          "document_sha256": "0acc567b0b15c32ce8be6bea9f05d4577d1c6c68710f7c534526caeafa960707",
+          "embedding_model": "all-minilm:22m"
+        }
+      ],
+      "tool_calls": [],
+      "model_response": {
+        "answer": [
+          "Accepted cancellation rows are counted separately from invalid data-quality rows.",
+          "A C invoice indicates cancellation but does not prove a physical return, completed refund, or reason for cancellation."
+        ],
+        "source_ids": [
+          "kpi-dictionary",
+          "data-contract"
+        ]
+      },
+      "quotes": [
+        {
+          "source_id": "kpi-dictionary",
+          "chunk_id": "kpi-dictionary#0",
+          "source_path": "docs/KPI_DICTIONARY.md",
+          "text": "| Recorded sales value | Sum(quantity * unit_price) over accepted sale rows | Revenue proxy; not audited revenue or profit |\n\n| Recorded cancellation value | Negative sum(quantity * unit_price) over accepted cancellation rows, reported as a positive magnitude | Recorded-date cancellation amount, not a physical-return rate |\n\n| Net recorded sales | Recorded sales value minus recorded cancellation value | Other adjustments excluded and disclosed;",
+          "url": "http://127.0.0.1:15690/workflow/p4-rag-core-v1/executions/82"
+        },
+        {
+          "source_id": "data-contract",
+          "chunk_id": "data-contract#1",
+          "source_path": "docs/DATA_CONTRACT.md",
+          "text": "; excluded from the initial net-sales formula and disclosed |\n\n| Invalid | Invalid/missing invoice or time, non-numeric quantity/price, negative price, or missing essential product key | Quarantined or specifically excluded with an explicit reason |\n\n| Customer missing | Otherwise valid row with null customer_id | Retained for sales; excluded only from customer-level metrics |\n\nReport counts and monetary impact where calculable for every",
+          "url": "http://127.0.0.1:15690/workflow/p4-rag-core-v1/executions/82"
+        },
+        {
+          "source_id": "data-contract",
+          "chunk_id": "data-contract#2",
+          "source_path": "docs/DATA_CONTRACT.md",
+          "text": "|\n\nReport counts and monetary impact where calculable for every exclusion. A C invoice indicates cancellation in the source dictionary; it is not proof of a physical product return, completed refund, or why a customer cancelled.",
+          "url": "http://127.0.0.1:15690/workflow/p4-rag-core-v1/executions/82"
+        }
+      ],
+      "validated_rule_ids": [
+        "cancellation",
+        "physical"
+      ],
+      "actual_model_context_verified": true,
+      "required_schema_coverage_verified": true,
+      "content_source_validation": "PASS",
+      "direct_context_prompt_verified": true
+    },
+    {
+      "id": 83,
+      "workflow": "p4-rag-demo-v1",
+      "status": "success"
+    },
+    {
+      "id": 84,
+      "workflow": "p4-rag-core-v1",
+      "status": "success",
+      "question": "How do missing customer IDs affect sales inclusion and customer coverage, and how are cancellations treated in net recorded sales?",
+      "query_embedding_dimensions": 384,
+      "semantic_matches": [
+        {
+          "chunk_id": "kpi-dictionary#1",
+          "similarity": 0.5841065423774513
+        },
+        {
+          "chunk_id": "data-contract#1",
+          "similarity": 0.5699697220289386
+        },
+        {
+          "chunk_id": "kpi-dictionary#2",
+          "similarity": 0.5597601294875074
+        },
+        {
+          "chunk_id": "kpi-dictionary#0",
+          "similarity": 0.38240923776681646
+        }
+      ],
+      "answer": "Net recorded sales equals recorded sales value minus recorded cancellation value. Other adjustments are excluded from net recorded sales and disclosed separately. Otherwise valid rows with missing customer IDs remain in sales and are excluded only from customer-level metrics. Customer coverage equals accepted sale rows with a customer ID divided by all accepted sale rows; it measures row completeness, not people.",
+      "citations": [
+        "kpi-dictionary#0",
+        "kpi-dictionary#1",
+        "data-contract#1",
+        "kpi-dictionary#2"
+      ],
+      "source_ids": [
+        "kpi-dictionary",
+        "data-contract"
+      ],
+      "answer_status": "PASS",
+      "retrieved_chunks": [
+        {
+          "text": "d cancellation value | Other adjustments excluded and disclosed; not cash flow |\n\n| Average sales invoice value | Recorded sales value / sales invoice count | Null if denominator is zero; report segment effects |\n\n| Active identified customers | Distinct non-null customer IDs on accepted sale rows | Anonymous/unidentified sales are separately counted |\n\n| Customer coverage | Accepted sale rows with a customer ID / all accepted sale rows |",
+          "chunk_id": "kpi-dictionary#1",
+          "source_id": "kpi-dictionary",
+          "similarity": 0.5841065423774513,
+          "source_path": "docs/KPI_DICTIONARY.md",
+          "document_sha256": "c4bb60196f2c098c41a35ca045d5ee280adbf18609ffaf1c5341aa2a81319fb3",
+          "embedding_model": "all-minilm:22m"
+        },
+        {
+          "text": "; excluded from the initial net-sales formula and disclosed |\n\n| Invalid | Invalid/missing invoice or time, non-numeric quantity/price, negative price, or missing essential product key | Quarantined or specifically excluded with an explicit reason |\n\n| Customer missing | Otherwise valid row with null customer_id | Retained for sales; excluded only from customer-level metrics |\n\nReport counts and monetary impact where calculable for every",
+          "chunk_id": "data-contract#1",
+          "source_id": "data-contract",
+          "similarity": 0.5699697220289386,
+          "source_path": "docs/DATA_CONTRACT.md",
+          "document_sha256": "0acc567b0b15c32ce8be6bea9f05d4577d1c6c68710f7c534526caeafa960707",
+          "embedding_model": "all-minilm:22m"
+        },
+        {
+          "text": "Accepted sale rows with a customer ID / all accepted sale rows | Row-based completeness, not a people estimate |",
+          "chunk_id": "kpi-dictionary#2",
+          "source_id": "kpi-dictionary",
+          "similarity": 0.5597601294875074,
+          "source_path": "docs/KPI_DICTIONARY.md",
+          "document_sha256": "c4bb60196f2c098c41a35ca045d5ee280adbf18609ffaf1c5341aa2a81319fb3",
+          "embedding_model": "all-minilm:22m"
+        },
+        {
+          "text": "| Recorded sales value | Sum(quantity * unit_price) over accepted sale rows | Revenue proxy; not audited revenue or profit |\n\n| Recorded cancellation value | Negative sum(quantity * unit_price) over accepted cancellation rows, reported as a positive magnitude | Recorded-date cancellation amount, not a physical-return rate |\n\n| Net recorded sales | Recorded sales value minus recorded cancellation value | Other adjustments excluded and disclosed;",
+          "chunk_id": "kpi-dictionary#0",
+          "source_id": "kpi-dictionary",
+          "similarity": 0.38240923776681646,
+          "source_path": "docs/KPI_DICTIONARY.md",
+          "document_sha256": "c4bb60196f2c098c41a35ca045d5ee280adbf18609ffaf1c5341aa2a81319fb3",
+          "embedding_model": "all-minilm:22m"
+        }
+      ],
+      "tool_calls": [],
+      "model_response": {
+        "answer": [
+          "Net recorded sales equals recorded sales value minus recorded cancellation value.",
+          "Other adjustments are excluded from net recorded sales and disclosed separately.",
+          "Otherwise valid rows with missing customer IDs remain in sales and are excluded only from customer-level metrics.",
+          "Customer coverage equals accepted sale rows with a customer ID divided by all accepted sale rows; it measures row completeness, not people."
+        ],
+        "source_ids": [
+          "kpi-dictionary",
+          "data-contract"
+        ]
+      },
+      "quotes": [
+        {
+          "source_id": "kpi-dictionary",
+          "chunk_id": "kpi-dictionary#0",
+          "source_path": "docs/KPI_DICTIONARY.md",
+          "text": "| Recorded sales value | Sum(quantity * unit_price) over accepted sale rows | Revenue proxy; not audited revenue or profit |\n\n| Recorded cancellation value | Negative sum(quantity * unit_price) over accepted cancellation rows, reported as a positive magnitude | Recorded-date cancellation amount, not a physical-return rate |\n\n| Net recorded sales | Recorded sales value minus recorded cancellation value | Other adjustments excluded and disclosed;",
+          "url": "http://127.0.0.1:15690/workflow/p4-rag-core-v1/executions/84"
+        },
+        {
+          "source_id": "kpi-dictionary",
+          "chunk_id": "kpi-dictionary#1",
+          "source_path": "docs/KPI_DICTIONARY.md",
+          "text": "d cancellation value | Other adjustments excluded and disclosed; not cash flow |\n\n| Average sales invoice value | Recorded sales value / sales invoice count | Null if denominator is zero; report segment effects |\n\n| Active identified customers | Distinct non-null customer IDs on accepted sale rows | Anonymous/unidentified sales are separately counted |\n\n| Customer coverage | Accepted sale rows with a customer ID / all accepted sale rows |",
+          "url": "http://127.0.0.1:15690/workflow/p4-rag-core-v1/executions/84"
+        },
+        {
+          "source_id": "data-contract",
+          "chunk_id": "data-contract#1",
+          "source_path": "docs/DATA_CONTRACT.md",
+          "text": "; excluded from the initial net-sales formula and disclosed |\n\n| Invalid | Invalid/missing invoice or time, non-numeric quantity/price, negative price, or missing essential product key | Quarantined or specifically excluded with an explicit reason |\n\n| Customer missing | Otherwise valid row with null customer_id | Retained for sales; excluded only from customer-level metrics |\n\nReport counts and monetary impact where calculable for every",
+          "url": "http://127.0.0.1:15690/workflow/p4-rag-core-v1/executions/84"
+        },
+        {
+          "source_id": "kpi-dictionary",
+          "chunk_id": "kpi-dictionary#2",
+          "source_path": "docs/KPI_DICTIONARY.md",
+          "text": "Accepted sale rows with a customer ID / all accepted sale rows | Row-based completeness, not a people estimate |",
+          "url": "http://127.0.0.1:15690/workflow/p4-rag-core-v1/executions/84"
+        }
+      ],
+      "validated_rule_ids": [
+        "net",
+        "adjustments",
+        "missing",
+        "coverage"
+      ],
+      "actual_model_context_verified": true,
+      "required_schema_coverage_verified": true,
+      "content_source_validation": "PASS",
+      "direct_context_prompt_verified": true
+    }
+  ],
+  "database": {
+    "database": "raa_p4_rag",
+    "pgvector": "0.8.7",
+    "chunks": 6,
+    "dimensions": 384,
+    "sources": 2,
+    "nonzero": true
+  },
+  "grants": {
+    "read_select": true,
+    "read_write": false,
+    "ingest_select": true,
+    "ingest_insert": true,
+    "ingest_update_delete": false,
+    "read_only_setting": [
+      "default_transaction_read_only=on"
+    ]
+  },
+  "native_parser_schema_expression": "={{ JSON.stringify($('Prepare answer schema').first().json.answer_schema) }}",
+  "encrypted_credentials": true,
+  "RAM": "raa-p4-demo-rag-postgres-1|32.36MiB / 512MiB|0.00%\nraa-p1-demo-n8n-1|924.5MiB / 3GiB|0.22%\nraa-p2-demo-ollama-1|3.106GiB / 6GiB|0.00%\n",
+  "OOM": false,
+  "history_logs_public_files_secret_scan": "PASS",
+  "old_executions_retained": true,
+  "status": "PASS",
+  "acceptance_execution_ids": [
+    80,
+    82,
+    84
+  ],
+  "answer_mode": "Model-selected schema-constrained policy summaries; exact retrieved quotations generated programmatically",
+  "windows_free_ram_gib": 3.73,
+  "windows_total_ram_gib": 15.53,
+  "targeted_local_checks": {
+    "semantic_source_schema_quotes": 13,
+    "question_specific_schemas": 4
+  },
+  "scope": "Final new P4 executions >=79 only",
+  "limitations": "Finite supported policy vocabulary; not unrestricted factual prose. No real abstention scenario claimed.",
+  "intermediate_non_acceptance_execution_ids": [
+    72,
+    74,
+    76,
+    78
+  ]
+}

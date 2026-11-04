@@ -1,0 +1,14 @@
+[
+  {
+    "source_id": "kpi-dictionary",
+    "source_path": "docs/KPI_DICTIONARY.md",
+    "document_sha256": "c4bb60196f2c098c41a35ca045d5ee280adbf18609ffaf1c5341aa2a81319fb3",
+    "text": "| Recorded sales value | Sum(quantity * unit_price) over accepted sale rows | Revenue proxy; not audited revenue or profit |\n\n| Recorded cancellation value | Negative sum(quantity * unit_price) over accepted cancellation rows, reported as a positive magnitude | Recorded-date cancellation amount, not a physical-return rate |\n\n| Net recorded sales | Recorded sales value minus recorded cancellation value | Other adjustments excluded and disclosed; not cash flow |\n\n| Average sales invoice value | Recorded sales value / sales invoice count | Null if denominator is zero; report segment effects |\n\n| Active identified customers | Distinct non-null customer IDs on accepted sale rows | Anonymous/unidentified sales are separately counted |\n\n| Customer coverage | Accepted sale rows with a customer ID / all accepted sale rows | Row-based completeness, not a people estimate |"
+  },
+  {
+    "source_id": "data-contract",
+    "source_path": "docs/DATA_CONTRACT.md",
+    "document_sha256": "0acc567b0b15c32ce8be6bea9f05d4577d1c6c68710f7c534526caeafa960707",
+    "text": "| Sale | Non-cancellation invoice, quantity > 0, finite price >= 0, valid required keys/time | Included in sale aggregates |\n\n| Cancellation | Invoice begins with C, quantity < 0, finite price >= 0, valid keys/time | Included as negative cancellation value |\n\n| Other adjustment | Negative quantity without C, or contradictory cancellation/quantity signs | Separate adjustment bucket; excluded from the initial net-sales formula and disclosed |\n\n| Invalid | Invalid/missing invoice or time, non-numeric quantity/price, negative price, or missing essential product key | Quarantined or specifically excluded with an explicit reason |\n\n| Customer missing | Otherwise valid row with null customer_id | Retained for sales; excluded only from customer-level metrics |\n\nReport counts and monetary impact where calculable for every exclusion. A C invoice indicates cancellation in the source dictionary; it is not proof of a physical product return, completed refund, or why a customer cancelled."
+  }
+]

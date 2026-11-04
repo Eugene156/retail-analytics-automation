@@ -1,0 +1,62 @@
+{
+  "status": "verified-in-current-environment",
+  "stage": "P1.2 Human Approval",
+  "checks": [
+    {
+      "case_id": "e123495f-6acf-4ac5-870f-d79b5f5fcdd7",
+      "request_id": "a8cd3e43-c968-491c-aae5-e87b07f0a439",
+      "decision": "APPROVED",
+      "publication_count": 1,
+      "n8n_execution_id": 12,
+      "browser_click": "verified-in-current-environment"
+    },
+    {
+      "case_id": "c39c1032-1ff0-4e0b-b415-c0dacea1abf4",
+      "request_id": "0d9b914a-1c73-4cc9-9f41-41a245c29c72",
+      "decision": "REJECTED",
+      "publication_count": 0,
+      "n8n_execution_id": 15,
+      "browser_click": "verified-in-current-environment"
+    }
+  ],
+  "create_execution_ids": [
+    10,
+    13
+  ],
+  "integrated_core_execution_ids": [
+    11,
+    14
+  ],
+  "decision_execution_ids": [
+    12,
+    15
+  ],
+  "negative_manual_core_execution": {
+    "id": 16,
+    "expected_status": "error",
+    "blocked_before_HTTP": true
+  },
+  "new_execution_history_secret_scan": "pass: complete serialized context/input/output for parent,core,decision,including negative check",
+  "demo_log_secret_scan": "pass: stdout/stderr, previous10minutes",
+  "Git_tracked_staged_and_workflow_secret_scan": "pass",
+  "old_token_status": 401,
+  "new_token_status": 200,
+  "n8n_credential_encrypted_at_rest": true,
+  "retained_old_execution_ids": [
+    6,
+    8
+  ],
+  "old_executions_exported": false,
+  "old_executions_deleted": false,
+  "source_rows": 1067371,
+  "historical_containers_still_exited": 8,
+  "screenshots": [
+    "p12/approve-v2.png",
+    "p12/reject-v2.png",
+    "p12/n8n-approve-v2.png"
+  ],
+  "manual_report_url": "http://127.0.0.1:15690/workflow/p12-create-report-v1",
+  "owner_url": "http://127.0.0.1:18082/portal",
+  "decision_url": "http://127.0.0.1:15690/workflow/p12-human-decision-v1/executions",
+  "limitation": "Legacy P1.1 credential holds the revoked token; current demonstrations use P1.2. Retained old6/8 remain unsuitable for export."
+}

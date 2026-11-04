@@ -1,0 +1,193 @@
+{
+  "date": "2026-10-11",
+  "status": "PASS",
+  "scope": "Exactly two sequential live Combined reruns after the minimal P2/P3 answer rendering repair",
+  "offline_checks_passed": 42,
+  "offline_method": "18 new renderer/defect checks plus16 existing evaluation checks, then4 retained numeric-guard checks and4 existing single-tool path checks; actual exported JS executed with Node",
+  "workflow_changes": "Only systemMessage and Validate tool evidence code on the two existing cores, saved through n8n UI; connections/caller guards verified unchanged",
+  "answer_method": "Model chooses/calls real tools and returns validated source_tools JSON. Mandatory numeric lines are rendered from actual observations; not model-authored prose. Original model JSON and field-level fact provenance retained. Existing P3 numeric guard runs on the rendered lines. No monetary float arithmetic or hardcoded demo values.",
+  "deploy_validation": "Saved prompt/JS equals tested export; n8n UI omitted hasOutputParser=false as the disabled default",
+  "live_workflow_runs": 2,
+  "cases": [
+    {
+      "id": 104,
+      "workflow": "p2-read-agent-core-v1",
+      "answer": "Quality findings: 0\nMissing customer sale rows: 0\nSale rows: 33\nNet recorded sales: GBP 79.42\nGross sales: GBP 1349.45\nCancellation rows: 41\nCancellation magnitude: GBP 1270.03",
+      "raw_model_output": "{\"source_tools\": [\"Get_Sales_KPIs\", \"Get_Data_Quality\"]}",
+      "model_response": {
+        "source_tools": [
+          "Get_Sales_KPIs",
+          "Get_Data_Quality"
+        ]
+      },
+      "evidenced_facts": [
+        {
+          "label": "Quality findings",
+          "value": 0,
+          "source_tool": "Get_Data_Quality",
+          "field": "quality.finding_rows"
+        },
+        {
+          "label": "Missing customer sale rows",
+          "value": 0,
+          "source_tool": "Get_Data_Quality",
+          "field": "missing_customer_sale_rows"
+        },
+        {
+          "label": "Sale rows",
+          "value": 33,
+          "source_tool": "Get_Sales_KPIs",
+          "field": "kpis.sale_rows"
+        },
+        {
+          "label": "Net recorded sales",
+          "value": "79.42",
+          "source_tool": "Get_Sales_KPIs",
+          "field": "kpis.net_recorded_sales_gbp"
+        },
+        {
+          "label": "Gross sales",
+          "value": "1349.45",
+          "source_tool": "Get_Sales_KPIs",
+          "field": "kpis.sales_value_gbp"
+        },
+        {
+          "label": "Cancellation rows",
+          "value": 41,
+          "source_tool": "Get_Sales_KPIs",
+          "field": "kpis.cancellation_rows"
+        },
+        {
+          "label": "Cancellation magnitude",
+          "value": "1270.03",
+          "source_tool": "Get_Sales_KPIs",
+          "field": "kpis.cancellation_magnitude_gbp"
+        }
+      ],
+      "tools_used": [
+        "Get_Data_Quality",
+        "Get_Sales_KPIs"
+      ],
+      "metrics": {
+        "Tool Selection Accuracy": true,
+        "Factual Correctness": true,
+        "Citation Validity": null,
+        "Schema Compliance": true,
+        "Pass Rate": true
+      },
+      "answer_origin": "actual-tool-facts",
+      "parent_execution_id": 103,
+      "original_model_output_verified": true,
+      "real_tool_call_count": 2,
+      "workflow_url": "http://127.0.0.1:15690/workflow/p2-read-agent-core-v1/executions/104"
+    },
+    {
+      "id": 106,
+      "workflow": "p3-mcp-agent-core-v1",
+      "answer": "Quality findings: 0\nMissing customer sale rows: 0\nSale rows: 33\nNet recorded sales: GBP 79.42\nGross sales: GBP 1349.45\nCancellation rows: 41\nCancellation magnitude: GBP 1270.03",
+      "raw_model_output": "{\"source_tools\": [\"get_sales_kpis\", \"get_data_quality\"]}",
+      "model_response": {
+        "source_tools": [
+          "get_sales_kpis",
+          "get_data_quality"
+        ]
+      },
+      "evidenced_facts": [
+        {
+          "label": "Quality findings",
+          "value": 0,
+          "source_tool": "get_data_quality",
+          "field": "quality.finding_rows"
+        },
+        {
+          "label": "Missing customer sale rows",
+          "value": 0,
+          "source_tool": "get_data_quality",
+          "field": "missing_customer_sale_rows"
+        },
+        {
+          "label": "Sale rows",
+          "value": 33,
+          "source_tool": "get_sales_kpis",
+          "field": "kpis.sale_rows"
+        },
+        {
+          "label": "Net recorded sales",
+          "value": "79.42",
+          "source_tool": "get_sales_kpis",
+          "field": "kpis.net_recorded_sales_gbp"
+        },
+        {
+          "label": "Gross sales",
+          "value": "1349.45",
+          "source_tool": "get_sales_kpis",
+          "field": "kpis.sales_value_gbp"
+        },
+        {
+          "label": "Cancellation rows",
+          "value": 41,
+          "source_tool": "get_sales_kpis",
+          "field": "kpis.cancellation_rows"
+        },
+        {
+          "label": "Cancellation magnitude",
+          "value": "1270.03",
+          "source_tool": "get_sales_kpis",
+          "field": "kpis.cancellation_magnitude_gbp"
+        }
+      ],
+      "tools_used": [
+        "get_data_quality",
+        "get_sales_kpis"
+      ],
+      "metrics": {
+        "Tool Selection Accuracy": true,
+        "Factual Correctness": true,
+        "Citation Validity": null,
+        "Schema Compliance": true,
+        "Pass Rate": true
+      },
+      "answer_origin": "actual-tool-facts",
+      "parent_execution_id": 105,
+      "original_model_output_verified": true,
+      "real_tool_call_count": 2,
+      "workflow_url": "http://127.0.0.1:15690/workflow/p3-mcp-agent-core-v1/executions/106"
+    }
+  ],
+  "history_known_secret_scan": "PASS",
+  "logs_known_secret_scan": "PASS",
+  "log_scope": "20-minute logs for main/P2 API, n8n and isolated Ollama",
+  "OOMKilled": false,
+  "old_failures_preserved": [
+    92,
+    96
+  ],
+  "old_executions_6_8_retained": true,
+  "Docker_resource_mutations": false,
+  "process_restarts": false,
+  "limitations": [
+    "Single-tool live cases were not rerun after this repair; their renderer paths passed offline regression tests.",
+    "P1/P4 were not modified or rerun.",
+    "Latest eight-case acceptance combines six previous successful cases with these two new Combined passes; not a fresh eight-case run.",
+    "Bounded demo checks do not establish general LLM accuracy.",
+    "Original failures and evidence/p6_live_validation.json remain unchanged."
+  ],
+  "RAM": {
+    "sampled_Ollama_GiB": [
+      3.057,
+      3.264
+    ],
+    "sampled_n8n_MiB": [
+      577,
+      597.7
+    ],
+    "final_Windows_free_GiB": 2.307,
+    "measurement": "Point samples, not continuous peak profiling"
+  },
+  "publication_preflight": {
+    "status": "PASS",
+    "candidates": 439,
+    "known_secret_values_compared": 54,
+    "Git_index_empty": true
+  }
+}

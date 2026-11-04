@@ -1,0 +1,9 @@
+# WP1 policy-v1 golden cases
+
+Status: synthetic fixture self-checked; application SQL and manual baseline are not yet verified. Fixture: `tests/fixtures/kpi_policy_v1.json`. These invented rows are test inputs only, never presented as the UCI retailer's records.
+
+The first period is `[2010-12-01 00:00, 2010-12-02 00:00)` in naive source time. Four accepted sale rows yield GBP 8.60 across three distinct sale invoices and eight units. One cancellation has GBP 1.25 magnitude, so net recorded sales are GBP 7.35. A non-C negative-quantity row is disclosed as a GBP -2.00 other adjustment; a negative-price row is invalid and has a calculable signed GBP -5.00 impact. Neither enters net sales. Two of four accepted sale rows have customer IDs, so row-based customer coverage is exactly 1/2 and the count of distinct identified customers is one. Average sale invoice value is exactly 43/15 GBP; the cancellation-to-sales value ratio is exactly 25/172. The zero-price sale remains included, and the missing-customer sale remains included.
+
+A sale at exactly `2010-12-02 00:00` is excluded from the first period and included in the next day, proving the end-exclusive boundary. An empty third day has zero sale value and count, with null average and null cancellation ratio rather than division by zero. Monetary fixture inputs are decimal strings and the self-check uses Python `Decimal`/`Fraction`; no binary-float business arithmetic is used.
+
+`scripts/check_wp1_fixture.py` recomputes the expected values as a fixture consistency check. It is not independent SQL verification or evidence that the product classification/importer/report exists. Later WP2 SQL tests must calculate these figures from the implemented tables and compare them to this frozen fixture; report display rounding remains a separate documented decision. The owner's actual manual timing/quality baseline is still unmeasured and must not be invented.

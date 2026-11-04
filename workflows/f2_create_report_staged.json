@@ -1,0 +1,168 @@
+{
+  "id": "p12-create-report-v1",
+  "name": "P1.2 Create Report for Human Approval",
+  "active": false,
+  "nodes": [
+    {
+      "id": "p12-manual",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "p12-core-call",
+      "name": "Create verified report and approval request",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "p12-report-core-v2",
+          "mode": "id"
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      }
+    },
+    {
+      "id": "f2-webhook",
+      "name": "F2 signed creation",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        240
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "f2-create-report-v1",
+        "authentication": "none",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "webhookId": "df3a4c8d-e98b-4b7a-b184-143e9bb38b7e"
+    },
+    {
+      "id": "f2-envelope",
+      "name": "Check F2 envelope",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        240
+      ],
+      "parameters": {
+        "jsCode": "if ($execution.mode !== 'production') throw new Error('Use the production F2 webhook'); const w=$input.first().json; if (!w.body || !w.query || Object.keys(w.query).length || w.params && Object.keys(w.params).length) throw new Error('Invalid creation envelope'); return [{json:{envelope:w.body,execution_id:String($execution.id)}}];"
+      }
+    },
+    {
+      "id": "f2-admission",
+      "name": "Verify and atomically admit",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        240
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://approval:8000/f2-internal/admit",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 10000
+        }
+      }
+    },
+    {
+      "id": "f2-assert",
+      "name": "Require committed admission",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        240
+      ],
+      "parameters": {
+        "jsCode": "const a=$input.first().json; const e=$('Check F2 envelope').first().json; if(a.admitted!==true || a.operation_id!==e.envelope.operation_id || a.execution_id!==String($execution.id)) throw new Error('Creation admission denied'); return [{json:{operation_id:a.operation_id}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Create verified report and approval request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "F2 signed creation": {
+      "main": [
+        [
+          {
+            "node": "Check F2 envelope",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check F2 envelope": {
+      "main": [
+        [
+          {
+            "node": "Verify and atomically admit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify and atomically admit": {
+      "main": [
+        [
+          {
+            "node": "Require committed admission",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Require committed admission": {
+      "main": [
+        [
+          {
+            "node": "Create verified report and approval request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 240,
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  },
+  "pinData": {}
+}

@@ -1,0 +1,447 @@
+{
+  "version": "wp4-clone006-closed-caps-v1",
+  "scope": "fresh-populated-clone-only",
+  "entries": [
+    {
+      "signature": "api_accept_portal_attempt_v1(uuid,text,uuid,text)",
+      "name": "api_accept_portal_attempt_v1",
+      "arguments": "p_action uuid, p_key text, p_attempt uuid, p_execution text",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "0708919dc561d006f8f7ce2b03dce0c7082a168dece951350fbae3613988cb88"
+    },
+    {
+      "signature": "api_accept_portal_publication_v2(uuid,text)",
+      "name": "api_accept_portal_publication_v2",
+      "arguments": "p_action uuid, p_key text",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "cc654837ecb6982000b7cc5b17e5c66fdb4481b7a0265746c71b4b2bb7360cf0"
+    },
+    {
+      "signature": "api_comparison_report_v1(text,timestamp,timestamp,timestamp)",
+      "name": "api_comparison_report_v1",
+      "arguments": "p_source_file_sha256 text, p_start_inclusive timestamp without time zone, p_end_exclusive timestamp without time zone, p_source_as_of_exclusive timestamp without time zone",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "2e0a6a415d3d5bd57a387643f315bc842aa465e5162bb5b4ded35d3b2105b8c9"
+    },
+    {
+      "signature": "api_current_approval_request_v2(uuid)",
+      "name": "api_current_approval_request_v2",
+      "arguments": "p_case uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "23c0eb8ea318dd968ced8defa6223cf19dc9fa532f49ca14294f589f9c9302e0"
+    },
+    {
+      "signature": "api_decide_portal_request_v2(text,text,uuid,text,text,text)",
+      "name": "api_decide_portal_request_v2",
+      "arguments": "p_session text, p_csrf text, p_request uuid, p_hash text, p_choice text, p_key text",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "bb2f8555f0af6c72c421306335728d81513981cbf77c63a7aa572608c331719f"
+    },
+    {
+      "signature": "api_decide_request_v1(text,text,uuid,uuid,integer,text,text,text,text)",
+      "name": "api_decide_request_v1",
+      "arguments": "p_session text, p_csrf text, p_case uuid, p_proposal uuid, p_revision integer, p_report_hash text, p_proposal_hash text, p_choice text, p_key text",
+      "returns": "text",
+      "timezone": true,
+      "owner": "g0_user",
+      "preimage_sha256": "cd180d3c5fcc75986610dac313ac7a4f39e298575481670c2be0dbcc94bebb39"
+    },
+    {
+      "signature": "api_decision_snapshot_v1(text,uuid,uuid)",
+      "name": "api_decision_snapshot_v1",
+      "arguments": "p_session text, p_case uuid, p_proposal uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "cb1da2ffa74c2860d846ec6443bc232399f7b7a1c5f2c2082ef3d20194e03e93"
+    },
+    {
+      "signature": "api_finish_report_v1(uuid)",
+      "name": "api_finish_report_v1",
+      "arguments": "p_case_id uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "adc3a259fbf0ad3a2e3af0e29ecbf46070817cbccc9ca86e6d2574c7e5e486c1"
+    },
+    {
+      "signature": "api_get_approval_proposal_v1(uuid)",
+      "name": "api_get_approval_proposal_v1",
+      "arguments": "p_case_id uuid",
+      "returns": "text",
+      "timezone": true,
+      "owner": "g0_user",
+      "preimage_sha256": "3367aa24506e96253f8a3ec52d9ca999648bda69689634bf82ecaf528af43d61"
+    },
+    {
+      "signature": "api_get_approval_request_v2(uuid,uuid)",
+      "name": "api_get_approval_request_v2",
+      "arguments": "p_case uuid, p_id uuid",
+      "returns": "text",
+      "timezone": true,
+      "owner": "g0_user",
+      "preimage_sha256": "0ab7ffbc24cf03dc9385fcdc09b2e4eae4b2514d22ea2c6872b19f042adb18a2"
+    },
+    {
+      "signature": "api_get_case_v1(uuid)",
+      "name": "api_get_case_v1",
+      "arguments": "p_case_id uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "8337632a28598112971056536123df939669b1f5153330571a48c37197163675"
+    },
+    {
+      "signature": "api_get_revision_v1(uuid,integer)",
+      "name": "api_get_revision_v1",
+      "arguments": "p_case_id uuid, p_revision integer",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "1e7dc5f119491269b46334a7220ef3e25465d75e7d8be2c9424bf9e69a995bd0"
+    },
+    {
+      "signature": "api_issue_approval_request_v2(uuid,integer,text,text,uuid)",
+      "name": "api_issue_approval_request_v2",
+      "arguments": "p_case uuid, p_revision integer, p_hash text, p_key text, p_predecessor uuid",
+      "returns": "text",
+      "timezone": true,
+      "owner": "g0_user",
+      "preimage_sha256": "a3ecd2fc912094c3533daa3fdb9d729dedb29e7ac115a8a1d3464d79c76bad31"
+    },
+    {
+      "signature": "api_issue_portal_request_v3(uuid,text,text,uuid)",
+      "name": "api_issue_portal_request_v3",
+      "arguments": "p_case uuid, p_hash text, p_key text, p_parent uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "eda6e0e9a176c108311193b7a38e9aeb4bbf1d5f2952de7db0537d4c88d83630"
+    },
+    {
+      "signature": "api_operator_reconcile_portal_v1(uuid,text,text)",
+      "name": "api_operator_reconcile_portal_v1",
+      "arguments": "p_action uuid, p_key text, p_recovery text",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "44dbef9b05f8b68787d1db0240634395bc50a748682181c1fd9b2abae4270f04"
+    },
+    {
+      "signature": "api_owner_approval_request_v2(text,uuid,uuid)",
+      "name": "api_owner_approval_request_v2",
+      "arguments": "p_digest text, p_case uuid, p_id uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "e606809db3fa1b1281e9a9b4d5abe2619141210501a4394472a9c73cf5036666"
+    },
+    {
+      "signature": "api_owner_case_v1(text,uuid)",
+      "name": "api_owner_case_v1",
+      "arguments": "p_digest text, p_case_id uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "1595120bdb984255cb88922b75285194359c66b5d6d0c200b9319384c191bd91"
+    },
+    {
+      "signature": "api_owner_current_request_v2(text,uuid)",
+      "name": "api_owner_current_request_v2",
+      "arguments": "p_digest text, p_case uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "e3eec3b20f16532f16e0091702f1f12519c78c215ed5c482c9f19375b2d90c29"
+    },
+    {
+      "signature": "api_owner_decide_portal_request_v3(text,text,uuid,uuid,text,text,text,text)",
+      "name": "api_owner_decide_portal_request_v3",
+      "arguments": "p_session text, p_csrf text, p_case uuid, p_request uuid, p_report_hash text, p_request_hash text, p_choice text, p_key text",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "42c8ab06628b6624840d3095c0cb039bf06b6d21d95ed6fc9c3ba70f0d00ff2c"
+    },
+    {
+      "signature": "api_owner_identity_v1(text)",
+      "name": "api_owner_identity_v1",
+      "arguments": "p_digest text",
+      "returns": "uuid",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "d3afbb784a08ae76487429bdf8d457d0e1c5884a3f307a7012dcf87a65a46bc1"
+    },
+    {
+      "signature": "api_owner_portal_export_v2(text,uuid)",
+      "name": "api_owner_portal_export_v2",
+      "arguments": "p_session text, p_action uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "12e69c699429553a12569fcd32e3da43fbc2bd6467ccd4ee7f96ec8140d4449c"
+    },
+    {
+      "signature": "api_owner_portal_receipt_v2(text,uuid)",
+      "name": "api_owner_portal_receipt_v2",
+      "arguments": "p_session text, p_action uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "b4c071eb5f6aa4bc798271a022d3498b19ceb55dbeac0ad2f802d44656d2b7a9"
+    },
+    {
+      "signature": "api_owner_portal_request_v3(text,uuid)",
+      "name": "api_owner_portal_request_v3",
+      "arguments": "p_session text, p_request uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "87218cf4409d271abd537a1944a1441bda0d1f3c908fc13f88ef40826a770bf1"
+    },
+    {
+      "signature": "api_owner_portal_requests_v3(text)",
+      "name": "api_owner_portal_requests_v3",
+      "arguments": "p_session text",
+      "returns": "text",
+      "timezone": true,
+      "owner": "g0_user",
+      "preimage_sha256": "e3602d979bfd86e9ef1bfaef74c05cc4c683317e11ec098b62deaea27cdf50b4"
+    },
+    {
+      "signature": "api_owner_portal_review_v3(text,uuid,uuid)",
+      "name": "api_owner_portal_review_v3",
+      "arguments": "p_session text, p_case uuid, p_request uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "b997795e419ae97aa3961669e193f3e9ed77f4f758ed78be0d073eb5c2925e19"
+    },
+    {
+      "signature": "api_owner_portal_transition_v1(text,uuid)",
+      "name": "api_owner_portal_transition_v1",
+      "arguments": "p_session text, p_case uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "6b0e1495709ccbea31cdc6f9dd5fd710f0076eb4660a3059a1c6e62398f97dff"
+    },
+    {
+      "signature": "api_owner_proposal_v1(text,uuid)",
+      "name": "api_owner_proposal_v1",
+      "arguments": "p_digest text, p_case_id uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "e569ce3dd23246cff06937f18025caf0c0e940d9049b84187ff933a3b5422a04"
+    },
+    {
+      "signature": "api_owner_retired_legacy_request_v1(text,uuid,uuid)",
+      "name": "api_owner_retired_legacy_request_v1",
+      "arguments": "p_session text, p_case uuid, p_old uuid",
+      "returns": "text",
+      "timezone": true,
+      "owner": "g0_user",
+      "preimage_sha256": "f2c90149d1ad69b3b2b33adc9d040cc6d4864e304a70f7255ee7738c0f7c3cfa"
+    },
+    {
+      "signature": "api_owner_revision_v1(text,uuid,integer)",
+      "name": "api_owner_revision_v1",
+      "arguments": "p_digest text, p_case_id uuid, p_revision integer",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "3bfbc3c2d36d0a4899a65557ddb61d3b847812c12c721a1994bd1aaaa00a5d05"
+    },
+    {
+      "signature": "api_portal_attempt_state_v1(uuid,text)",
+      "name": "api_portal_attempt_state_v1",
+      "arguments": "p_action uuid, p_key text",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "a62348f0f0a5615a9f123783f41cd75e81db8ec7d38833cba62ced49c0d71a97"
+    },
+    {
+      "signature": "api_portal_auth_identity_v2(text)",
+      "name": "api_portal_auth_identity_v2",
+      "arguments": "p_session text",
+      "returns": "uuid",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "120f18ce723909baea49269861842651e2fe119d4f4cb708dafa41e9c716520c"
+    },
+    {
+      "signature": "api_portal_auth_login_v2(text,text,text,text)",
+      "name": "api_portal_auth_login_v2",
+      "arguments": "p_owner text, p_session text, p_csrf text, p_old text",
+      "returns": "text",
+      "timezone": true,
+      "owner": "g0_user",
+      "preimage_sha256": "282b8078d8f5ec43d7009da5073419bd827a67397ba8c82a319c432fd69f85d4"
+    },
+    {
+      "signature": "api_portal_auth_logout_v2(text,text)",
+      "name": "api_portal_auth_logout_v2",
+      "arguments": "p_session text, p_csrf text",
+      "returns": "boolean",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "97c1bfe297a97ee7c34da4ff239043a66753977ea3eec37208d07fe80d3ac2ee"
+    },
+    {
+      "signature": "api_portal_case_v1(text,uuid)",
+      "name": "api_portal_case_v1",
+      "arguments": "p_session text, p_case uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "e35e25d45dc88873070b87c44435c887eef39628e235dfd4b253f2b26116b87e"
+    },
+    {
+      "signature": "api_portal_identity_v1(text)",
+      "name": "api_portal_identity_v1",
+      "arguments": "p_session text",
+      "returns": "uuid",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "232eb981a3225c4b4069719419ecce242f1652e6e9c28118983f14cf886ba6e6"
+    },
+    {
+      "signature": "api_portal_login_v1(text,text,text,text)",
+      "name": "api_portal_login_v1",
+      "arguments": "p_owner text, p_session text, p_csrf text, p_old text",
+      "returns": "uuid",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "1dfd45d55f2311641c11945a13288b166649f73b5fdd7fa1629f43adda7ada0f"
+    },
+    {
+      "signature": "api_portal_logout_v1(text,text)",
+      "name": "api_portal_logout_v1",
+      "arguments": "p_session text, p_csrf text",
+      "returns": "boolean",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "5f6d88ba12a6f6b520e95adefaa9bfd41fbc55ec2c34e15d561b2775c3fa8544"
+    },
+    {
+      "signature": "api_portal_publication_state_v2(uuid)",
+      "name": "api_portal_publication_state_v2",
+      "arguments": "p_action uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "87291e07d3f5d0453f1a09fb0571f8deee885ff0c8630e86fdc24e13dbd928e2"
+    },
+    {
+      "signature": "api_portal_request_v1(text,uuid,uuid)",
+      "name": "api_portal_request_v1",
+      "arguments": "p_session text, p_case uuid, p_id uuid",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "9617cf74596e0b1aab6f8cd57f4e1d390a75337e1b980c8c7d1f8762ba1de7c9"
+    },
+    {
+      "signature": "api_portal_requests_v1(text)",
+      "name": "api_portal_requests_v1",
+      "arguments": "p_session text",
+      "returns": "text",
+      "timezone": true,
+      "owner": "g0_user",
+      "preimage_sha256": "fb78fe236b40c18a91a4c0143a206a116876504f49c83a0ae8df96f68092c96e"
+    },
+    {
+      "signature": "api_portal_revision_v1(text,uuid,integer)",
+      "name": "api_portal_revision_v1",
+      "arguments": "p_session text, p_case uuid, p_revision integer",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "a3b354226d64fae8cbb88df7fd345ccbf50847d9f33d053a9ce7b4c1f78cf188"
+    },
+    {
+      "signature": "api_portal_transition_state_v1(uuid,text)",
+      "name": "api_portal_transition_state_v1",
+      "arguments": "p_case uuid, p_key text",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "4e44915a77c405a6ef3e157f32c524c69dcdc8af946945c5eb27a40d6d04c40b"
+    },
+    {
+      "signature": "api_reconcile_portal_attempt_v1(uuid,text)",
+      "name": "api_reconcile_portal_attempt_v1",
+      "arguments": "p_action uuid, p_key text",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "bbee0f37a52d7da92add6247dcec6bd01076a638efc28d35649036a144b8803f"
+    },
+    {
+      "signature": "api_report_portal_attempt_v1(uuid,text,uuid,text,text)",
+      "name": "api_report_portal_attempt_v1",
+      "arguments": "p_action uuid, p_key text, p_attempt uuid, p_execution text, p_outcome text",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "9ad35ac3dbc5d30ec3806bda8e13d601fba5b78ef466e17444e73a20a8f30e83"
+    },
+    {
+      "signature": "api_reserve_portal_attempt_v1(uuid,text,uuid,text,text,text,text)",
+      "name": "api_reserve_portal_attempt_v1",
+      "arguments": "p_action uuid, p_key text, p_case uuid, p_request_sha text, p_report_sha text, p_attempt_key text, p_execution text",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "8a7198358264db065022f5b77b13b2d2763c13569bc3fe0490196eedf73b1250"
+    },
+    {
+      "signature": "api_reserve_report_v1(text,text,timestamp,timestamp,timestamp)",
+      "name": "api_reserve_report_v1",
+      "arguments": "p_key text, p_hash text, p_start timestamp without time zone, p_end timestamp without time zone, p_asof timestamp without time zone",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "3b61cbbbe2b640f85ce2730d088b9d20555a968f9e1ff54faea3caa34eacf7f9"
+    },
+    {
+      "signature": "api_transition_legacy_portal_v1(uuid,uuid,text,text,text)",
+      "name": "api_transition_legacy_portal_v1",
+      "arguments": "p_case uuid, p_old uuid, p_old_hash text, p_report_hash text, p_key text",
+      "returns": "text",
+      "timezone": true,
+      "owner": "g0_user",
+      "preimage_sha256": "541e490ae4c29c6cb1ad998be2f88dba2f7c7bf207052e7293c3a78b958a536c"
+    },
+    {
+      "signature": "api_worker_accept_portal_v2(uuid,text,uuid,text,text)",
+      "name": "api_worker_accept_portal_v2",
+      "arguments": "p_action uuid, p_key text, p_case uuid, p_request_sha text, p_report_sha text",
+      "returns": "text",
+      "timezone": false,
+      "owner": "g0_user",
+      "preimage_sha256": "75c31f974c8856fcad5ae292a194b977074c55ecfdc3eaa1b1d136806ced2f63"
+    },
+    {
+      "signature": "api_worker_portal_state_v2(uuid,text)",
+      "name": "api_worker_portal_state_v2",
+      "arguments": "p_action uuid, p_key text",
+      "returns": "text",
+      "timezone": true,
+      "owner": "g0_user",
+      "preimage_sha256": "aeb05a5fd14861be623619eddc5b1ff7198fce177a5ddb9efc4713e705292a72"
+    }
+  ]
+}

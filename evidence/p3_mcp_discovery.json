@@ -1,0 +1,125 @@
+{
+  "discovery": {
+    "tools": [
+      {
+        "name": "get_sales_kpis",
+        "description": "Read real PostgreSQL sales KPIs for 2011-01-28 09:00-10:00 Europe/London. No writes or arguments.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "annotations": {
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "execution": {
+          "taskSupport": "forbidden"
+        }
+      },
+      {
+        "name": "get_data_quality",
+        "description": "Read real PostgreSQL data quality findings and missing customer counts for the same demo period. No writes or arguments.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "annotations": {
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "execution": {
+          "taskSupport": "forbidden"
+        }
+      }
+    ]
+  },
+  "requests": [
+    {
+      "method": "tools/call",
+      "name": "get_data_quality",
+      "arguments": {},
+      "response": {
+        "schema_version": "p2-read-tool-v1",
+        "source_file_sha256": "BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980",
+        "period": {
+          "source_file_sha256": "BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980",
+          "source_time_interpretation": "Europe/London-assumed",
+          "period_start_inclusive": "2011-01-28T09:00:00Z",
+          "period_end_exclusive": "2011-01-28T10:00:00Z",
+          "source_as_of_exclusive": "2011-01-28T10:00:00Z"
+        },
+        "access": "read-only",
+        "quality": {
+          "finding_rows": 0,
+          "flagged_source_rows": 0,
+          "finding_rows_by_code": {
+            "zero_quantity": 0,
+            "missing_invoice": 0,
+            "zero_price_sale": 0,
+            "invalid_quantity": 0,
+            "invalid_unit_price": 0,
+            "missing_stock_code": 0,
+            "missing_customer_id": 0,
+            "missing_description": 0,
+            "negative_unit_price": 0,
+            "invalid_invoice_datetime": 0,
+            "negative_quantity_without_c": 0,
+            "c_invoice_non_negative_quantity": 0
+          }
+        },
+        "period_source_rows": 74,
+        "missing_customer_sale_rows": 0,
+        "notes": "Findings can overlap; missing CustomerID does not exclude valid sales."
+      }
+    },
+    {
+      "method": "tools/call",
+      "name": "get_sales_kpis",
+      "arguments": {},
+      "response": {
+        "schema_version": "p2-read-tool-v1",
+        "source_file_sha256": "BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980",
+        "period": {
+          "source_file_sha256": "BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980",
+          "source_time_interpretation": "Europe/London-assumed",
+          "period_start_inclusive": "2011-01-28T09:00:00Z",
+          "period_end_exclusive": "2011-01-28T10:00:00Z",
+          "source_as_of_exclusive": "2011-01-28T10:00:00Z"
+        },
+        "access": "read-only",
+        "kpis": {
+          "sale_rows": 33,
+          "units_sold": 675,
+          "invalid_rows": 0,
+          "sales_value_gbp": "1349.45",
+          "cancellation_rows": 41,
+          "invalid_signed_gbp": 0,
+          "period_source_rows": 74,
+          "zero_quantity_rows": 0,
+          "sales_invoice_count": 2,
+          "zero_price_sale_rows": 0,
+          "other_adjustment_rows": 0,
+          "net_recorded_sales_gbp": "79.42",
+          "customer_coverage_exact": "1.00000000000000000000",
+          "cancellation_magnitude_gbp": "1270.03",
+          "missing_customer_sale_rows": 0,
+          "active_identified_customers": 2,
+          "other_adjustment_signed_gbp": 0,
+          "invalid_value_calculable_rows": 0,
+          "average_sales_invoice_value_exact": "674.7250000000000000",
+          "cancellation_to_sales_value_ratio_exact": "0.94114639297491570640"
+        }
+      }
+    }
+  ],
+  "unknown_arguments_denied": true,
+  "anonymous_status": 401
+}

@@ -1,0 +1,94 @@
+{
+  "id": "p2-read-agent-demo-v1",
+  "name": "P2 Read-only AI Agent - Manual Demo",
+  "active": false,
+  "nodes": [
+    {
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "question---edit-to-repeat-demo",
+      "name": "Question - edit to repeat demo",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "question",
+              "name": "question",
+              "type": "string",
+              "value": "What are net revenue, gross revenue and sale rows for the demo period?"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "run-read-only-ai-agent",
+      "name": "Run read-only AI Agent",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "p2-read-agent-core-v1",
+          "mode": "id"
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Question - edit to repeat demo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question - edit to repeat demo": {
+      "main": [
+        [
+          {
+            "node": "Run read-only AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 240,
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  },
+  "pinData": {}
+}

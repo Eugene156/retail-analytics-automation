@@ -1,0 +1,1 @@
+case_id,variant,sequence,dataset_sha256,report_period,run_at,active_human_minutes,elapsed_minutes,accepted,numerical_errors,unsupported_claims,manual_corrections,fallback_used,runtime_charge,currency,software_commit,model_revision,reviewer_code,notes

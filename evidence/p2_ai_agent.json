@@ -1,0 +1,116 @@
+{
+  "history_and_logs_secret_scan": "PASS",
+  "Git_secret_scan": "PASS",
+  "encrypted_credentials_at_rest": true,
+  "old_executions_retained": true,
+  "executions": [
+    {
+      "id": 17,
+      "workflow": "p2-read-agent-demo-v1",
+      "status": "success"
+    },
+    {
+      "id": 18,
+      "workflow": "p2-read-agent-core-v1",
+      "status": "PASS",
+      "question": "What are net revenue, gross revenue and sale rows for the demo period?",
+      "tools_used": [
+        "Get_Sales_KPIs"
+      ],
+      "answer": "Net revenue: \u00a379.42, Gross revenue: \u00a31349.45, Sale rows: 33."
+    },
+    {
+      "id": 19,
+      "workflow": "p2-read-agent-demo-v1",
+      "status": "success"
+    },
+    {
+      "id": 20,
+      "workflow": "p2-read-agent-core-v1",
+      "status": "success",
+      "question": "What data quality issues and missing customer IDs exist in the demo period?",
+      "agent_status": "BLOCKED",
+      "agent_error": "Model output doesn't fit required format"
+    },
+    {
+      "id": 21,
+      "workflow": "p2-read-agent-demo-v1",
+      "status": "error",
+      "error": "Expected ':' after property name in JSON at position 176 (line 1 column 177) [line 1]"
+    },
+    {
+      "id": 22,
+      "workflow": "p2-read-agent-core-v1",
+      "status": "error",
+      "error": "Expected ':' after property name in JSON at position 176 (line 1 column 177) [line 1]",
+      "question": "What data quality issues and missing customer IDs exist in the demo period?"
+    },
+    {
+      "id": 23,
+      "workflow": "p2-read-agent-demo-v1",
+      "status": "success"
+    },
+    {
+      "id": 24,
+      "workflow": "p2-read-agent-core-v1",
+      "status": "PASS",
+      "question": "What data quality issues and missing customer IDs exist in the demo period?",
+      "tools_used": [
+        "Get_Data_Quality"
+      ],
+      "answer": "No data quality issues or missing customer IDs were found in the demo period. All flagged rows (e.g., missing customer ID, invalid quantities) are zero. The period covered 2011-01-28 09:00\u201310:00 Europe/London with 74 source rows and no missing customer sales."
+    },
+    {
+      "id": 25,
+      "workflow": "p2-read-agent-demo-v1",
+      "status": "success"
+    },
+    {
+      "id": 26,
+      "workflow": "p2-read-agent-core-v1",
+      "status": "PASS",
+      "question": "Summarize sales KPIs and data quality issues for the demo period.",
+      "tools_used": [
+        "Get_Data_Quality",
+        "Get_Sales_KPIs"
+      ],
+      "answer": "Sales KPIs: 675 units sold, \u00a31,349.45 sales value, \u00a379.42 net recorded sales, 41 cancellations (\u00a31,270.03 magnitude), average invoice value \u00a3674.73. Customer coverage is 100%. Data quality: No findings flagged; all fields valid. Missing customer sales: 0. All records valid and complete for the period."
+    },
+    {
+      "id": 27,
+      "workflow": "p2-read-agent-demo-v1",
+      "status": "success"
+    },
+    {
+      "id": 28,
+      "workflow": "p2-read-agent-core-v1",
+      "status": "PASS",
+      "question": "What are net revenue, gross revenue and sale rows for the demo period?",
+      "tools_used": [
+        "Get_Sales_KPIs"
+      ],
+      "answer": "Net revenue: \u00a379.42  \nGross revenue: \u00a31,349.45  \nSale rows: 33"
+    }
+  ],
+  "scope": "P2 actual n8n manual executions, native AI Agent and local Ollama",
+  "workflow_url": "http://127.0.0.1:15690/workflow/p2-read-agent-demo-v1",
+  "status": "PASS",
+  "final_core_execution_ids": [
+    24,
+    26,
+    28
+  ],
+  "model": "qwen3:4b-instruct",
+  "output_contract": "Model-generated text inside a validated deterministic JSON envelope; tools_used derived from actual tool calls",
+  "resources": {
+    "ollama_gib": 3.387,
+    "postgres_mib": 1023,
+    "n8n_mib": 572.8,
+    "api_mib": 95.66,
+    "runner_mib": 111.1,
+    "windows_free_gib": 2.04,
+    "oom_killed": false,
+    "restarts": 0
+  },
+  "read_only_security_checks": "PASS; GET authenticated, POST/query denied, P1 token separated; existing DB role has no table write or admin privileges"
+}

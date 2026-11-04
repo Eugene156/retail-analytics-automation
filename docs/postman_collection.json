@@ -1,0 +1,581 @@
+{
+  "info": {
+    "name": "Retail Analytics - Safe REST Demo",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Demo only. Run Safe smoke folder first. Existing-case reads need an existing case. State-changing draft creation requires prior owner approval and explicit flags; skipped by default. No approval/write SQL/publication tools."
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{api_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (!/^http:\\/\\/127\\.0\\.0\\.1:\\d+$/.test(pm.variables.get(\"base_url\") || \"\")) { pm.execution.skipRequest(); throw new Error(\"Set loopback base_url\"); }"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Safe smoke (no business writes)",
+      "item": [
+        {
+          "name": "Health (public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/healthz",
+            "description": "Health (public); saved responses are synthetic examples, not live results.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected status\", () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test(\"JSON response schema\", () => pm.response.to.have.jsonSchema({\"type\": \"object\", \"properties\": {\"status\": {\"type\": \"string\", \"enum\": [\"ok\"]}}, \"required\": [\"status\"]}));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "SYNTHETIC expected response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/healthz",
+                "description": "Health (public); saved responses are synthetic examples, not live results.",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"ok\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Readiness (authenticated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/readyz",
+            "description": "Readiness (authenticated); saved responses are synthetic examples, not live results."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected status\", () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test(\"JSON response schema\", () => pm.response.to.have.jsonSchema({\"type\": \"object\", \"properties\": {\"status\": {\"type\": \"string\", \"enum\": [\"ready\"]}}, \"required\": [\"status\"]}));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "SYNTHETIC expected response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/readyz",
+                "description": "Readiness (authenticated); saved responses are synthetic examples, not live results."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"ready\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "OpenAPI (authenticated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/openapi.json",
+            "description": "OpenAPI (authenticated); saved responses are synthetic examples, not live results."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected status\", () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test(\"JSON response schema\", () => pm.response.to.have.jsonSchema({\"type\": \"object\", \"properties\": {\"openapi\": {\"type\": \"string\"}, \"info\": {\"type\": \"object\"}, \"paths\": {\"type\": \"object\"}}, \"required\": [\"openapi\", \"info\", \"paths\"]}));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "SYNTHETIC expected response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/openapi.json",
+                "description": "OpenAPI (authenticated); saved responses are synthetic examples, not live results."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"openapi\": \"3.1.0\",\n  \"info\": {\n    \"title\": \"Synthetic contract example\",\n    \"version\": \"example\"\n  },\n  \"paths\": {}\n}"
+            }
+          ]
+        },
+        {
+          "name": "Readiness without token:401",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/readyz",
+            "description": "Readiness without token:401; saved responses are synthetic examples, not live results.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected status\", () => pm.expect(pm.response.code).to.be.oneOf([401]));",
+                  "pm.test(\"JSON response schema\", () => pm.response.to.have.jsonSchema({\"type\": \"object\", \"properties\": {\"detail\": {\"type\": \"string\"}}, \"required\": [\"detail\"]}));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "SYNTHETIC expected response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/readyz",
+                "description": "Readiness without token:401; saved responses are synthetic examples, not live results.",
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Expected error",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Unauthorized\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Comparison: read-only POST",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/v1/calculations/comparison",
+            "description": "Comparison: read-only POST; saved responses are synthetic examples, not live results.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source_file_sha256\": \"BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980\",\n  \"source_time_interpretation\": \"Europe/London-assumed\",\n  \"period_start_inclusive\": \"2011-01-28T09:00:00Z\",\n  \"period_end_exclusive\": \"2011-01-28T10:00:00Z\",\n  \"source_as_of_exclusive\": \"2011-01-28T10:00:00Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected status\", () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test(\"JSON response schema\", () => pm.response.to.have.jsonSchema({\"type\": \"object\", \"properties\": {\"schema_version\": {\"type\": \"string\", \"enum\": [\"deterministic-comparison-report-v1\"]}, \"current_period\": {\"type\": \"object\", \"properties\": {\"schema_version\": {\"type\": \"string\"}, \"kpis\": {\"type\": \"object\", \"properties\": {\"sale_rows\": {\"type\": \"number\"}, \"sales_value_gbp\": {\"type\": \"number\"}, \"net_recorded_sales_gbp\": {\"type\": \"number\"}, \"cancellation_rows\": {\"type\": \"number\"}, \"cancellation_magnitude_gbp\": {\"type\": \"number\"}}, \"required\": [\"sale_rows\", \"sales_value_gbp\", \"net_recorded_sales_gbp\", \"cancellation_rows\", \"cancellation_magnitude_gbp\"]}, \"quality\": {\"type\": \"object\", \"properties\": {\"finding_rows\": {\"type\": \"integer\", \"minimum\": 0}, \"flagged_source_rows\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"finding_rows\", \"flagged_source_rows\"]}}, \"required\": [\"schema_version\", \"kpis\", \"quality\"]}, \"prior_period\": {\"type\": \"object\", \"properties\": {\"schema_version\": {\"type\": \"string\"}, \"kpis\": {\"type\": \"object\", \"properties\": {\"sale_rows\": {\"type\": \"number\"}, \"sales_value_gbp\": {\"type\": \"number\"}, \"net_recorded_sales_gbp\": {\"type\": \"number\"}, \"cancellation_rows\": {\"type\": \"number\"}, \"cancellation_magnitude_gbp\": {\"type\": \"number\"}}, \"required\": [\"sale_rows\", \"sales_value_gbp\", \"net_recorded_sales_gbp\", \"cancellation_rows\", \"cancellation_magnitude_gbp\"]}, \"quality\": {\"type\": \"object\", \"properties\": {\"finding_rows\": {\"type\": \"integer\", \"minimum\": 0}, \"flagged_source_rows\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"finding_rows\", \"flagged_source_rows\"]}}, \"required\": [\"schema_version\", \"kpis\", \"quality\"]}, \"changes\": {\"type\": \"object\"}}, \"required\": [\"schema_version\", \"current_period\", \"prior_period\", \"changes\"]}));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "SYNTHETIC expected response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/api/v1/calculations/comparison",
+                "description": "Comparison: read-only POST; saved responses are synthetic examples, not live results.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"source_file_sha256\": \"BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980\",\n  \"source_time_interpretation\": \"Europe/London-assumed\",\n  \"period_start_inclusive\": \"2011-01-28T09:00:00Z\",\n  \"period_end_exclusive\": \"2011-01-28T10:00:00Z\",\n  \"source_as_of_exclusive\": \"2011-01-28T10:00:00Z\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schema_version\": \"deterministic-comparison-report-v1\",\n  \"current_period\": {\n    \"schema_version\": \"deterministic-period-report-v1\",\n    \"kpis\": {\n      \"sale_rows\": 0,\n      \"sales_value_gbp\": 0,\n      \"net_recorded_sales_gbp\": 0,\n      \"cancellation_rows\": 0,\n      \"cancellation_magnitude_gbp\": 0\n    },\n    \"quality\": {\n      \"finding_rows\": 0,\n      \"flagged_source_rows\": 0\n    }\n  },\n  \"prior_period\": {\n    \"schema_version\": \"deterministic-period-report-v1\",\n    \"kpis\": {\n      \"sale_rows\": 0,\n      \"sales_value_gbp\": 0,\n      \"net_recorded_sales_gbp\": 0,\n      \"cancellation_rows\": 0,\n      \"cancellation_magnitude_gbp\": 0\n    },\n    \"quality\": {\n      \"finding_rows\": 0,\n      \"flagged_source_rows\": 0\n    }\n  },\n  \"changes\": {}\n}"
+            }
+          ]
+        },
+        {
+          "name": "Invalid calculation:422; no SQL",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/v1/calculations/comparison",
+            "description": "Invalid calculation:422; no SQL; saved responses are synthetic examples, not live results.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected status\", () => pm.expect(pm.response.code).to.be.oneOf([422]));",
+                  "pm.test(\"JSON response schema\", () => pm.response.to.have.jsonSchema({\"type\": \"object\", \"properties\": {\"detail\": {\"type\": \"string\"}}, \"required\": [\"detail\"]}));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "SYNTHETIC expected response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/api/v1/calculations/comparison",
+                "description": "Invalid calculation:422; no SQL; saved responses are synthetic examples, not live results.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Expected error",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Invalid calculation request\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Read existing case (prepare case_id)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!/^[0-9a-f-]{36}$/.test(pm.variables.get(\"case_id\") || \"\") || pm.variables.get(\"revision\") !== \"1\") { pm.execution.skipRequest(); }"
+            ]
+          }
+        }
+      ],
+      "item": [
+        {
+          "name": "Existing case",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/api/v1/cases/{{case_id}}",
+            "description": "Existing case; saved responses are synthetic examples, not live results."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected status\", () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test(\"JSON response schema\", () => pm.response.to.have.jsonSchema({\"type\": \"object\", \"properties\": {\"case_id\": {\"type\": \"string\", \"format\": \"uuid\"}, \"state\": {\"type\": \"string\"}, \"revision\": {\"type\": [\"integer\", \"null\"]}}, \"required\": [\"case_id\", \"state\", \"revision\"]}));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "SYNTHETIC expected response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/api/v1/cases/{{case_id}}",
+                "description": "Existing case; saved responses are synthetic examples, not live results."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"case_id\": \"00000000-0000-0000-0000-000000000033\",\n  \"state\": \"awaiting_approval\",\n  \"revision\": 1\n}"
+            }
+          ]
+        },
+        {
+          "name": "Existing revision",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/api/v1/cases/{{case_id}}/revisions/{{revision}}",
+            "description": "Existing revision; saved responses are synthetic examples, not live results."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected status\", () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test(\"JSON response schema\", () => pm.response.to.have.jsonSchema({\"type\": \"object\", \"properties\": {\"schema_version\": {\"type\": \"string\", \"enum\": [\"deterministic-comparison-report-v1\"]}, \"current_period\": {\"type\": \"object\", \"properties\": {\"schema_version\": {\"type\": \"string\"}, \"kpis\": {\"type\": \"object\", \"properties\": {\"sale_rows\": {\"type\": \"number\"}, \"sales_value_gbp\": {\"type\": \"number\"}, \"net_recorded_sales_gbp\": {\"type\": \"number\"}, \"cancellation_rows\": {\"type\": \"number\"}, \"cancellation_magnitude_gbp\": {\"type\": \"number\"}}, \"required\": [\"sale_rows\", \"sales_value_gbp\", \"net_recorded_sales_gbp\", \"cancellation_rows\", \"cancellation_magnitude_gbp\"]}, \"quality\": {\"type\": \"object\", \"properties\": {\"finding_rows\": {\"type\": \"integer\", \"minimum\": 0}, \"flagged_source_rows\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"finding_rows\", \"flagged_source_rows\"]}}, \"required\": [\"schema_version\", \"kpis\", \"quality\"]}, \"prior_period\": {\"type\": \"object\", \"properties\": {\"schema_version\": {\"type\": \"string\"}, \"kpis\": {\"type\": \"object\", \"properties\": {\"sale_rows\": {\"type\": \"number\"}, \"sales_value_gbp\": {\"type\": \"number\"}, \"net_recorded_sales_gbp\": {\"type\": \"number\"}, \"cancellation_rows\": {\"type\": \"number\"}, \"cancellation_magnitude_gbp\": {\"type\": \"number\"}}, \"required\": [\"sale_rows\", \"sales_value_gbp\", \"net_recorded_sales_gbp\", \"cancellation_rows\", \"cancellation_magnitude_gbp\"]}, \"quality\": {\"type\": \"object\", \"properties\": {\"finding_rows\": {\"type\": \"integer\", \"minimum\": 0}, \"flagged_source_rows\": {\"type\": \"integer\", \"minimum\": 0}}, \"required\": [\"finding_rows\", \"flagged_source_rows\"]}}, \"required\": [\"schema_version\", \"kpis\", \"quality\"]}, \"changes\": {\"type\": \"object\"}}, \"required\": [\"schema_version\", \"current_period\", \"prior_period\", \"changes\"]}));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "SYNTHETIC expected response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/api/v1/cases/{{case_id}}/revisions/{{revision}}",
+                "description": "Existing revision; saved responses are synthetic examples, not live results."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schema_version\": \"deterministic-comparison-report-v1\",\n  \"current_period\": {\n    \"schema_version\": \"deterministic-period-report-v1\",\n    \"kpis\": {\n      \"sale_rows\": 0,\n      \"sales_value_gbp\": 0,\n      \"net_recorded_sales_gbp\": 0,\n      \"cancellation_rows\": 0,\n      \"cancellation_magnitude_gbp\": 0\n    },\n    \"quality\": {\n      \"finding_rows\": 0,\n      \"flagged_source_rows\": 0\n    }\n  },\n  \"prior_period\": {\n    \"schema_version\": \"deterministic-period-report-v1\",\n    \"kpis\": {\n      \"sale_rows\": 0,\n      \"sales_value_gbp\": 0,\n      \"net_recorded_sales_gbp\": 0,\n      \"cancellation_rows\": 0,\n      \"cancellation_magnitude_gbp\": 0\n    },\n    \"quality\": {\n      \"finding_rows\": 0,\n      \"flagged_source_rows\": 0\n    }\n  },\n  \"changes\": {}\n}"
+            }
+          ]
+        },
+        {
+          "name": "HTML preview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/api/v1/cases/{{case_id}}/revisions/{{revision}}/preview",
+            "description": "HTML preview; saved responses are synthetic examples, not live results."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected status\", () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+                  "pm.test(\"HTML preview\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"text/html\"));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "SYNTHETIC expected response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/api/v1/cases/{{case_id}}/revisions/{{revision}}/preview",
+                "description": "HTML preview; saved responses are synthetic examples, not live results."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/html"
+                }
+              ],
+              "body": "<!doctype html><html><body>Synthetic preview</body></html>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "STATE CHANGING - explicit opt-in only",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.variables.get(\"allow_state_changes\") !== \"true\" || pm.variables.get(\"demo_target_confirmed\") !== \"true\" || !/^[A-Za-z0-9_-]{8,128}$/.test(pm.variables.get(\"idempotency_key\") || \"\")) { pm.execution.skipRequest(); }"
+            ]
+          }
+        }
+      ],
+      "item": [
+        {
+          "name": "STATE CHANGING - create draft; skipped by default",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotency_key}}"
+              }
+            ],
+            "url": "{{base_url}}/api/v1/report-requests",
+            "description": "STATE CHANGING - create draft; skipped by default; saved responses are synthetic examples, not live results.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source_file_sha256\": \"BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980\",\n  \"source_time_interpretation\": \"Europe/London-assumed\",\n  \"period_start_inclusive\": \"2011-01-28T09:00:00Z\",\n  \"period_end_exclusive\": \"2011-01-28T10:00:00Z\",\n  \"source_as_of_exclusive\": \"2011-01-28T10:00:00Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected status\", () => pm.expect(pm.response.code).to.be.oneOf([200, 202]));",
+                  "pm.test(\"JSON response schema\", () => pm.response.to.have.jsonSchema({\"type\": \"object\", \"properties\": {\"case_id\": {\"type\": \"string\", \"format\": \"uuid\"}, \"state\": {\"type\": \"string\"}, \"revision\": {\"type\": [\"integer\", \"null\"]}}, \"required\": [\"case_id\", \"state\", \"revision\"]}));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "SYNTHETIC expected response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Idempotency-Key",
+                    "value": "{{idempotency_key}}"
+                  }
+                ],
+                "url": "{{base_url}}/api/v1/report-requests",
+                "description": "STATE CHANGING - create draft; skipped by default; saved responses are synthetic examples, not live results.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"source_file_sha256\": \"BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980\",\n  \"source_time_interpretation\": \"Europe/London-assumed\",\n  \"period_start_inclusive\": \"2011-01-28T09:00:00Z\",\n  \"period_end_exclusive\": \"2011-01-28T10:00:00Z\",\n  \"source_as_of_exclusive\": \"2011-01-28T10:00:00Z\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"case_id\": \"00000000-0000-0000-0000-000000000033\",\n  \"state\": \"received\",\n  \"revision\": null\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

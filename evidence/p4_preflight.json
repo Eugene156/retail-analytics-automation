@@ -1,0 +1,46 @@
+{
+  "scope": "P4 dependency preflight only; no database retrieval/agent execution yet",
+  "pgvector_available": "0.8.7",
+  "pgvector_installed": false,
+  "documents": 2,
+  "chunks": 6,
+  "chunking_contract": "PASS",
+  "embedding": {
+    "model": "all-minilm:22m",
+    "count": 2,
+    "dimensions": 384,
+    "norms": [
+      1.0000000016445945,
+      1.0000001194424382
+    ],
+    "samples": [
+      [
+        -0.029097777,
+        0.045330074,
+        -0.078847386,
+        0.01677026,
+        -0.110727936,
+        0.037622284
+      ],
+      [
+        -0.046913963,
+        0.07918974,
+        -0.027096013,
+        0.047911108,
+        -0.04196118,
+        0.031304322
+      ]
+    ]
+  },
+  "loaded_embedding_RAM": [
+    "raa-p4-demo-rag-postgres-1|41.28MiB / 512MiB",
+    "raa-p2-demo-ollama-1|107.9MiB / 6GiB",
+    "raa-p1-demo-n8n-1|558.9MiB / 3GiB",
+    "raa-p1-demo-api-1|90.71MiB / 512MiB",
+    "raa-p1-demo-runner-1|14.89MiB / 512MiB",
+    "raa-p1-demo-postgres-1|186.3MiB / 3GiB"
+  ],
+  "old_models_unchanged": true,
+  "helper_retained": true,
+  "ports": "none on P4 PostgreSQL/helper"
+}

@@ -1,0 +1,164 @@
+{
+  "id": "p4-rag-index-v1",
+  "name": "P4 RAG - Index Documents",
+  "active": false,
+  "nodes": [
+    {
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "load-source-documents",
+      "name": "Load source documents",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return [{json:{documents:[{\"source_id\": \"kpi-dictionary\", \"source_path\": \"docs/KPI_DICTIONARY.md\", \"document_sha256\": \"c4bb60196f2c098c41a35ca045d5ee280adbf18609ffaf1c5341aa2a81319fb3\", \"text\": \"| Recorded sales value | Sum(quantity * unit_price) over accepted sale rows | Revenue proxy; not audited revenue or profit |\\n\\n| Recorded cancellation value | Negative sum(quantity * unit_price) over accepted cancellation rows, reported as a positive magnitude | Recorded-date cancellation amount, not a physical-return rate |\\n\\n| Net recorded sales | Recorded sales value minus recorded cancellation value | Other adjustments excluded and disclosed; not cash flow |\\n\\n| Average sales invoice value | Recorded sales value / sales invoice count | Null if denominator is zero; report segment effects |\\n\\n| Active identified customers | Distinct non-null customer IDs on accepted sale rows | Anonymous/unidentified sales are separately counted |\\n\\n| Customer coverage | Accepted sale rows with a customer ID / all accepted sale rows | Row-based completeness, not a people estimate |\"}, {\"source_id\": \"data-contract\", \"source_path\": \"docs/DATA_CONTRACT.md\", \"document_sha256\": \"0acc567b0b15c32ce8be6bea9f05d4577d1c6c68710f7c534526caeafa960707\", \"text\": \"| Sale | Non-cancellation invoice, quantity > 0, finite price >= 0, valid required keys/time | Included in sale aggregates |\\n\\n| Cancellation | Invoice begins with C, quantity < 0, finite price >= 0, valid keys/time | Included as negative cancellation value |\\n\\n| Other adjustment | Negative quantity without C, or contradictory cancellation/quantity signs | Separate adjustment bucket; excluded from the initial net-sales formula and disclosed |\\n\\n| Invalid | Invalid/missing invoice or time, non-numeric quantity/price, negative price, or missing essential product key | Quarantined or specifically excluded with an explicit reason |\\n\\n| Customer missing | Otherwise valid row with null customer_id | Retained for sales; excluded only from customer-level metrics |\\n\\nReport counts and monetary impact where calculable for every exclusion. A C invoice indicates cancellation in the source dictionary; it is not proof of a physical product return, completed refund, or why a customer cancelled.\"}]}}];"
+      }
+    },
+    {
+      "id": "chunk-documents",
+      "name": "Chunk documents",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const chunks=[];\nfor(const d of $json.documents){\n let start=0,index=0;\n while(start<d.text.length){\n  let end=Math.min(start+450,d.text.length);\n  if(end<d.text.length){const boundary=d.text.lastIndexOf(' ',end);if(boundary>start+250)end=boundary;}\n  const text=d.text.slice(start,end).trim();\n  chunks.push({chunk_id:d.source_id+'#'+index++,source_id:d.source_id,source_path:d.source_path,document_sha256:d.document_sha256,text,embedding_model:'all-minilm:22m'});\n  if(end===d.text.length)break;start=end-64;\n }\n}\nif(!chunks.length||chunks.length>12)throw new Error('Bounded corpus required');\nreturn [{json:{document_count:$json.documents.length,chunk_size:450,overlap:64,chunks}}];"
+      }
+    },
+    {
+      "id": "embed-chunks",
+      "name": "Embed chunks",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        600,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://raa-p2-demo-ollama-1:11434/api/embed",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({model:'all-minilm:22m',input:$json.chunks.map(c=>c.text),keep_alive:0,truncate:false}) }}",
+        "options": {
+          "timeout": 90000
+        }
+      }
+    },
+    {
+      "id": "validate-embeddings",
+      "name": "Validate embeddings",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const chunks=$('Chunk documents').first().json.chunks;const vectors=$json.embeddings;\nif(!Array.isArray(vectors)||vectors.length!==chunks.length||vectors.some(v=>v.length!==384||v.some(x=>!Number.isFinite(x))||v.every(x=>x===0)))throw new Error('Real 384-dimensional embeddings required');\nreturn [{json:{embedding_dimensions:384,embedding_count:vectors.length,chunks:chunks.map((c,i)=>({...c,embedding:vectors[i]}))}}];"
+      }
+    },
+    {
+      "id": "store-pgvector-chunks",
+      "name": "Store pgvector chunks",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1000,
+        0
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH inserted AS (\n INSERT INTO p4.chunks(chunk_id,source_id,source_path,document_sha256,text,embedding_model,embedding)\n SELECT c->>'chunk_id',c->>'source_id',c->>'source_path',c->>'document_sha256',c->>'text',c->>'embedding_model',(c->'embedding')::text::vector(384)\n FROM jsonb_array_elements($1::jsonb) AS c\n ON CONFLICT(chunk_id) DO NOTHING RETURNING chunk_id\n) SELECT count(*)::int AS inserted_chunks,384 AS embedding_dimensions FROM inserted;",
+        "options": {
+          "queryReplacement": "={{ [JSON.stringify($json.chunks)] }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "p4-rag-ingest",
+          "name": "P4 RAG index only"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Load source documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load source documents": {
+      "main": [
+        [
+          {
+            "node": "Chunk documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chunk documents": {
+      "main": [
+        [
+          {
+            "node": "Embed chunks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embed chunks": {
+      "main": [
+        [
+          {
+            "node": "Validate embeddings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate embeddings": {
+      "main": [
+        [
+          {
+            "node": "Store pgvector chunks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 240,
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  },
+  "pinData": {}
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "p1-report-demo-evidence-v1",
+  "date": "2026-10-10",
+  "scope": "isolated first P1 report block; approval/publication not enabled",
+  "status": "verified-in-current-environment",
+  "project": "raa-p1-demo",
+  "source_rows": 1067371,
+  "unchanged_migrations": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "current_period_rows": 74,
+  "sales_value_gbp": "1349.45",
+  "cancellation_magnitude_gbp": "1270.03",
+  "actual_execution": {
+    "status": "unapproved_draft_verified",
+    "case_id": "b14611b6-8ded-452b-9b36-20cf38b0251f",
+    "revision": 1,
+    "payload_sha256": "2e913def90e1a5e41f9ac6009dd49b7411a8e703d936cdc6b7e5f7a95ed12b07",
+    "n8n_execution_id": "1"
+  },
+  "runtime": {
+    "n8n_healthz": 200,
+    "api": "running-network-and-port-boundaries-verified",
+    "n8n": "running-network-and-port-boundaries-verified",
+    "postgres": "running-network-and-port-boundaries-verified",
+    "runner": "running-network-and-port-boundaries-verified",
+    "historical_containers": "8-remain-exited",
+    "retained_cli_containers": 3,
+    "real_report_verification": "unapproved_draft_verified",
+    "n8n_url": "http://127.0.0.1:15690"
+  },
+  "retained_cli_containers": 3,
+  "historical_containers": "8 remain Exited",
+  "limitations": [
+    "first report block only",
+    "approval and publication not enabled",
+    "long-term stability and video demonstration not verified"
+  ]
+}

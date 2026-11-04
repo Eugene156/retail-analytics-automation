@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_ToBe" targetNamespace="https://example.local/retail-analytics-automation/bpmn">
+  <bpmn:process id="Process_ToBe" name="Planned local n8n report and controlled publication" isExecutable="false">
+    <bpmn:documentation>Design only; implementation and end-to-end acceptance are pending. Deterministic SQL is authoritative; validated local-model text is optional and never authorizes publication. An uncertain publish outcome must be reconciled before any retry.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_ToBe">
+      <bpmn:lane id="Lane_Analyst" name="Analyst">
+        <bpmn:flowNodeRef>T_Start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Submit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_NeedsInput</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_InvalidEnd</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_System" name="n8n, FastAPI and PostgreSQL (planned)">
+        <bpmn:flowNodeRef>T_Validate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Quality</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Compute</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_AIChoice</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Model</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Timeout</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_CheckAI</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_AIValid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Fallback</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Freeze</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Reject</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_RejectedEnd</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Verify</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_ValidApproval</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_ExpiredEnd</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Outbox</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Publish</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_PublishError</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Audit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_PublishedEnd</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Reviewer" name="Reviewer">
+        <bpmn:flowNodeRef>T_Review</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Approval</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Operator" name="Operator / recovery">
+        <bpmn:flowNodeRef>T_Reconcile</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Retry</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_AttentionEnd</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="T_Start" name="Report requested">
+      <bpmn:outgoing>T_Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="T_Submit" name="Submit snapshot and period">
+      <bpmn:incoming>T_Flow_1</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Validate" name="Validate request and source quality">
+      <bpmn:incoming>T_Flow_2</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="T_Quality" name="Evidence valid?">
+      <bpmn:incoming>T_Flow_3</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_4</bpmn:outgoing>
+      <bpmn:outgoing>T_Flow_6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_NeedsInput" name="Record issue and request correction">
+      <bpmn:incoming>T_Flow_4</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="T_InvalidEnd" name="No report published">
+      <bpmn:incoming>T_Flow_5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="T_Compute" name="Compute SQL KPIs and evidence">
+      <bpmn:incoming>T_Flow_6</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="T_AIChoice" name="AI enabled?">
+      <bpmn:incoming>T_Flow_7</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_8</bpmn:outgoing>
+      <bpmn:outgoing>T_Flow_9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Model" name="Draft bounded local commentary">
+      <bpmn:incoming>T_Flow_8</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:boundaryEvent id="T_Timeout" name="30 s model timeout" attachedToRef="T_Model" cancelActivity="true">
+      <bpmn:outgoing>T_Flow_11</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="T_Timeout_Definition">
+        <bpmn:timeDuration>PT30S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:task id="T_CheckAI" name="Validate schema and evidence">
+      <bpmn:incoming>T_Flow_10</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="T_AIValid" name="AI draft valid?">
+      <bpmn:incoming>T_Flow_12</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_13</bpmn:outgoing>
+      <bpmn:outgoing>T_Flow_14</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Fallback" name="Use deterministic-only draft">
+      <bpmn:incoming>T_Flow_11</bpmn:incoming>
+      <bpmn:incoming>T_Flow_13</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_15</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Freeze" name="Freeze revision and payload hash">
+      <bpmn:incoming>T_Flow_9</bpmn:incoming>
+      <bpmn:incoming>T_Flow_14</bpmn:incoming>
+      <bpmn:incoming>T_Flow_15</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_16</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Review" name="Inspect exact revision and action">
+      <bpmn:incoming>T_Flow_16</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_17</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="T_Approval" name="Approve?">
+      <bpmn:incoming>T_Flow_17</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_18</bpmn:outgoing>
+      <bpmn:outgoing>T_Flow_20</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Reject" name="Record rejection">
+      <bpmn:incoming>T_Flow_18</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_19</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="T_RejectedEnd" name="Rejected; no action">
+      <bpmn:incoming>T_Flow_19</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="T_Verify" name="Verify bound approval and expiry">
+      <bpmn:incoming>T_Flow_20</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_21</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="T_ValidApproval" name="Approval valid?">
+      <bpmn:incoming>T_Flow_21</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_22</bpmn:outgoing>
+      <bpmn:outgoing>T_Flow_23</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="T_ExpiredEnd" name="Expired or changed; no action">
+      <bpmn:incoming>T_Flow_22</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="T_Outbox" name="Enqueue authorized outbox action">
+      <bpmn:incoming>T_Flow_23</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_24</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Publish" name="Publish local report">
+      <bpmn:incoming>T_Flow_24</bpmn:incoming>
+      <bpmn:incoming>T_Flow_30</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_25</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:boundaryEvent id="T_PublishError" name="Uncertain publish result" attachedToRef="T_Publish" cancelActivity="true">
+      <bpmn:outgoing>T_Flow_26</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="T_PublishError_Definition"></bpmn:errorEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:task id="T_Audit" name="Record outcome and audit">
+      <bpmn:incoming>T_Flow_25</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_27</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="T_PublishedEnd" name="Published and audited">
+      <bpmn:incoming>T_Flow_27</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="T_Reconcile" name="Reconcile actual outcome before retry">
+      <bpmn:incoming>T_Flow_26</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_28</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="T_Retry" name="Safe to retry?">
+      <bpmn:incoming>T_Flow_28</bpmn:incoming>
+      <bpmn:outgoing>T_Flow_29</bpmn:outgoing>
+      <bpmn:outgoing>T_Flow_30</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="T_AttentionEnd" name="Needs operator attention">
+      <bpmn:incoming>T_Flow_29</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="T_Flow_1" sourceRef="T_Start" targetRef="T_Submit"/>
+    <bpmn:sequenceFlow id="T_Flow_2" sourceRef="T_Submit" targetRef="T_Validate"/>
+    <bpmn:sequenceFlow id="T_Flow_3" sourceRef="T_Validate" targetRef="T_Quality"/>
+    <bpmn:sequenceFlow id="T_Flow_4" sourceRef="T_Quality" targetRef="T_NeedsInput" name="No"/>
+    <bpmn:sequenceFlow id="T_Flow_5" sourceRef="T_NeedsInput" targetRef="T_InvalidEnd"/>
+    <bpmn:sequenceFlow id="T_Flow_6" sourceRef="T_Quality" targetRef="T_Compute" name="Yes"/>
+    <bpmn:sequenceFlow id="T_Flow_7" sourceRef="T_Compute" targetRef="T_AIChoice"/>
+    <bpmn:sequenceFlow id="T_Flow_8" sourceRef="T_AIChoice" targetRef="T_Model" name="Yes"/>
+    <bpmn:sequenceFlow id="T_Flow_9" sourceRef="T_AIChoice" targetRef="T_Freeze" name="No"/>
+    <bpmn:sequenceFlow id="T_Flow_10" sourceRef="T_Model" targetRef="T_CheckAI"/>
+    <bpmn:sequenceFlow id="T_Flow_11" sourceRef="T_Timeout" targetRef="T_Fallback" name="Timeout"/>
+    <bpmn:sequenceFlow id="T_Flow_12" sourceRef="T_CheckAI" targetRef="T_AIValid"/>
+    <bpmn:sequenceFlow id="T_Flow_13" sourceRef="T_AIValid" targetRef="T_Fallback" name="No"/>
+    <bpmn:sequenceFlow id="T_Flow_14" sourceRef="T_AIValid" targetRef="T_Freeze" name="Yes"/>
+    <bpmn:sequenceFlow id="T_Flow_15" sourceRef="T_Fallback" targetRef="T_Freeze"/>
+    <bpmn:sequenceFlow id="T_Flow_16" sourceRef="T_Freeze" targetRef="T_Review"/>
+    <bpmn:sequenceFlow id="T_Flow_17" sourceRef="T_Review" targetRef="T_Approval"/>
+    <bpmn:sequenceFlow id="T_Flow_18" sourceRef="T_Approval" targetRef="T_Reject" name="No"/>
+    <bpmn:sequenceFlow id="T_Flow_19" sourceRef="T_Reject" targetRef="T_RejectedEnd"/>
+    <bpmn:sequenceFlow id="T_Flow_20" sourceRef="T_Approval" targetRef="T_Verify" name="Yes"/>
+    <bpmn:sequenceFlow id="T_Flow_21" sourceRef="T_Verify" targetRef="T_ValidApproval"/>
+    <bpmn:sequenceFlow id="T_Flow_22" sourceRef="T_ValidApproval" targetRef="T_ExpiredEnd" name="No"/>
+    <bpmn:sequenceFlow id="T_Flow_23" sourceRef="T_ValidApproval" targetRef="T_Outbox" name="Yes"/>
+    <bpmn:sequenceFlow id="T_Flow_24" sourceRef="T_Outbox" targetRef="T_Publish"/>
+    <bpmn:sequenceFlow id="T_Flow_25" sourceRef="T_Publish" targetRef="T_Audit"/>
+    <bpmn:sequenceFlow id="T_Flow_26" sourceRef="T_PublishError" targetRef="T_Reconcile" name="Failure or unknown"/>
+    <bpmn:sequenceFlow id="T_Flow_27" sourceRef="T_Audit" targetRef="T_PublishedEnd"/>
+    <bpmn:sequenceFlow id="T_Flow_28" sourceRef="T_Reconcile" targetRef="T_Retry"/>
+    <bpmn:sequenceFlow id="T_Flow_29" sourceRef="T_Retry" targetRef="T_AttentionEnd" name="No"/>
+    <bpmn:sequenceFlow id="T_Flow_30" sourceRef="T_Retry" targetRef="T_Publish" name="Yes, after reconciliation"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_ToBe">
+    <bpmndi:BPMNPlane id="Plane_ToBe" bpmnElement="Process_ToBe">
+      <bpmndi:BPMNShape id="Lane_Analyst_di" bpmnElement="Lane_Analyst" isHorizontal="true"><dc:Bounds x="40" y="60" width="3140" height="210"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_System_di" bpmnElement="Lane_System" isHorizontal="true"><dc:Bounds x="40" y="270" width="3140" height="260"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Reviewer_di" bpmnElement="Lane_Reviewer" isHorizontal="true"><dc:Bounds x="40" y="530" width="3140" height="190"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Operator_di" bpmnElement="Lane_Operator" isHorizontal="true"><dc:Bounds x="40" y="720" width="3140" height="200"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Start_di" bpmnElement="T_Start"><dc:Bounds x="90" y="140" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Submit_di" bpmnElement="T_Submit"><dc:Bounds x="180" y="115" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Validate_di" bpmnElement="T_Validate"><dc:Bounds x="360" y="340" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Quality_di" bpmnElement="T_Quality"><dc:Bounds x="540" y="355" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_NeedsInput_di" bpmnElement="T_NeedsInput"><dc:Bounds x="550" y="115" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_InvalidEnd_di" bpmnElement="T_InvalidEnd"><dc:Bounds x="735" y="137" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Compute_di" bpmnElement="T_Compute"><dc:Bounds x="730" y="340" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_AIChoice_di" bpmnElement="T_AIChoice"><dc:Bounds x="910" y="355" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Model_di" bpmnElement="T_Model"><dc:Bounds x="1040" y="340" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Timeout_di" bpmnElement="T_Timeout"><dc:Bounds x="1140" y="404" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_CheckAI_di" bpmnElement="T_CheckAI"><dc:Bounds x="1220" y="340" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_AIValid_di" bpmnElement="T_AIValid"><dc:Bounds x="1400" y="355" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Fallback_di" bpmnElement="T_Fallback"><dc:Bounds x="1410" y="440" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Freeze_di" bpmnElement="T_Freeze"><dc:Bounds x="1590" y="340" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Review_di" bpmnElement="T_Review"><dc:Bounds x="1770" y="575" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Approval_di" bpmnElement="T_Approval"><dc:Bounds x="1950" y="590" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Reject_di" bpmnElement="T_Reject"><dc:Bounds x="1960" y="440" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_RejectedEnd_di" bpmnElement="T_RejectedEnd"><dc:Bounds x="2140" y="462" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Verify_di" bpmnElement="T_Verify"><dc:Bounds x="2140" y="340" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_ValidApproval_di" bpmnElement="T_ValidApproval"><dc:Bounds x="2320" y="355" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_ExpiredEnd_di" bpmnElement="T_ExpiredEnd"><dc:Bounds x="2480" y="460" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Outbox_di" bpmnElement="T_Outbox"><dc:Bounds x="2470" y="340" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Publish_di" bpmnElement="T_Publish"><dc:Bounds x="2650" y="340" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_PublishError_di" bpmnElement="T_PublishError"><dc:Bounds x="2750" y="404" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Audit_di" bpmnElement="T_Audit"><dc:Bounds x="2830" y="340" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_PublishedEnd_di" bpmnElement="T_PublishedEnd"><dc:Bounds x="3010" y="362" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Reconcile_di" bpmnElement="T_Reconcile"><dc:Bounds x="2800" y="770" width="140" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Retry_di" bpmnElement="T_Retry"><dc:Bounds x="2980" y="785" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_AttentionEnd_di" bpmnElement="T_AttentionEnd"><dc:Bounds x="3120" y="850" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="T_Flow_1_di" bpmnElement="T_Flow_1"><di:waypoint x="126" y="158"/><di:waypoint x="180" y="155"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_2_di" bpmnElement="T_Flow_2"><di:waypoint x="250" y="195"/><di:waypoint x="430" y="340"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_3_di" bpmnElement="T_Flow_3"><di:waypoint x="500" y="380"/><di:waypoint x="540" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_4_di" bpmnElement="T_Flow_4"><di:waypoint x="565" y="355"/><di:waypoint x="620" y="195"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_5_di" bpmnElement="T_Flow_5"><di:waypoint x="690" y="155"/><di:waypoint x="735" y="155"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_6_di" bpmnElement="T_Flow_6"><di:waypoint x="590" y="380"/><di:waypoint x="730" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_7_di" bpmnElement="T_Flow_7"><di:waypoint x="870" y="380"/><di:waypoint x="910" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_8_di" bpmnElement="T_Flow_8"><di:waypoint x="960" y="380"/><di:waypoint x="1040" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_9_di" bpmnElement="T_Flow_9"><di:waypoint x="935" y="380"/><di:waypoint x="950" y="300"/><di:waypoint x="1570" y="300"/><di:waypoint x="1660" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_10_di" bpmnElement="T_Flow_10"><di:waypoint x="1180" y="380"/><di:waypoint x="1220" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_11_di" bpmnElement="T_Flow_11"><di:waypoint x="1176" y="422"/><di:waypoint x="1410" y="480"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_12_di" bpmnElement="T_Flow_12"><di:waypoint x="1360" y="380"/><di:waypoint x="1400" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_13_di" bpmnElement="T_Flow_13"><di:waypoint x="1425" y="405"/><di:waypoint x="1480" y="440"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_14_di" bpmnElement="T_Flow_14"><di:waypoint x="1450" y="380"/><di:waypoint x="1590" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_15_di" bpmnElement="T_Flow_15"><di:waypoint x="1550" y="480"/><di:waypoint x="1590" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_16_di" bpmnElement="T_Flow_16"><di:waypoint x="1660" y="420"/><di:waypoint x="1840" y="575"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_17_di" bpmnElement="T_Flow_17"><di:waypoint x="1910" y="615"/><di:waypoint x="1950" y="615"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_18_di" bpmnElement="T_Flow_18"><di:waypoint x="1975" y="590"/><di:waypoint x="2030" y="520"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_19_di" bpmnElement="T_Flow_19"><di:waypoint x="2100" y="480"/><di:waypoint x="2140" y="480"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_20_di" bpmnElement="T_Flow_20"><di:waypoint x="2000" y="615"/><di:waypoint x="2140" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_21_di" bpmnElement="T_Flow_21"><di:waypoint x="2280" y="380"/><di:waypoint x="2320" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_22_di" bpmnElement="T_Flow_22"><di:waypoint x="2370" y="380"/><di:waypoint x="2480" y="478"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_23_di" bpmnElement="T_Flow_23"><di:waypoint x="2370" y="380"/><di:waypoint x="2470" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_24_di" bpmnElement="T_Flow_24"><di:waypoint x="2610" y="380"/><di:waypoint x="2650" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_25_di" bpmnElement="T_Flow_25"><di:waypoint x="2790" y="380"/><di:waypoint x="2830" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_26_di" bpmnElement="T_Flow_26"><di:waypoint x="2768" y="440"/><di:waypoint x="2870" y="770"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_27_di" bpmnElement="T_Flow_27"><di:waypoint x="2970" y="380"/><di:waypoint x="3010" y="380"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_28_di" bpmnElement="T_Flow_28"><di:waypoint x="2940" y="810"/><di:waypoint x="2980" y="810"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_29_di" bpmnElement="T_Flow_29"><di:waypoint x="3030" y="810"/><di:waypoint x="3120" y="868"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="T_Flow_30_di" bpmnElement="T_Flow_30"><di:waypoint x="3005" y="810"/><di:waypoint x="2990" y="735"/><di:waypoint x="2700" y="735"/><di:waypoint x="2720" y="380"/></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

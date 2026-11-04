@@ -1,0 +1,292 @@
+{
+  "date": "2026-10-11",
+  "scope": "P6-A sequential existing n8n workflows, current SQL/MCP facts and existing offline evaluator applied to fresh executions",
+  "status": "BLOCKED",
+  "case_count": 8,
+  "passed": 6,
+  "cases": [
+    {
+      "case": "P2-KPI",
+      "parent_execution_id": 87,
+      "core_execution_id": 88,
+      "workflow_url": "http://127.0.0.1:15690/workflow/p2-read-agent-core-v1/executions/88",
+      "runtime_guard_status": "PASS",
+      "metrics": {
+        "Tool Selection Accuracy": true,
+        "Factual Correctness": true,
+        "Citation Validity": null,
+        "Schema Compliance": null,
+        "Pass Rate": true
+      },
+      "actual_agent_tools": [
+        "Get_Sales_KPIs"
+      ],
+      "request_response_count": 1,
+      "response_contract": "read-only p2-read-tool-v1",
+      "elapsed_seconds": 54.718
+    },
+    {
+      "case": "P2-Quality",
+      "parent_execution_id": 89,
+      "core_execution_id": 90,
+      "workflow_url": "http://127.0.0.1:15690/workflow/p2-read-agent-core-v1/executions/90",
+      "runtime_guard_status": "PASS",
+      "metrics": {
+        "Tool Selection Accuracy": true,
+        "Factual Correctness": true,
+        "Citation Validity": null,
+        "Schema Compliance": null,
+        "Pass Rate": true
+      },
+      "actual_agent_tools": [
+        "Get_Data_Quality"
+      ],
+      "request_response_count": 1,
+      "response_contract": "read-only p2-read-tool-v1",
+      "elapsed_seconds": 19.316
+    },
+    {
+      "case": "P2-Combined",
+      "parent_execution_id": 91,
+      "core_execution_id": 92,
+      "workflow_url": "http://127.0.0.1:15690/workflow/p2-read-agent-core-v1/executions/92",
+      "runtime_guard_status": "PASS",
+      "metrics": {
+        "Tool Selection Accuracy": true,
+        "Factual Correctness": false,
+        "Citation Validity": null,
+        "Schema Compliance": null,
+        "Pass Rate": false
+      },
+      "actual_agent_tools": [
+        "Get_Sales_KPIs",
+        "Get_Data_Quality"
+      ],
+      "request_response_count": 2,
+      "response_contract": "read-only p2-read-tool-v1",
+      "limitation": "The model reported cancellation magnitude GBP1270.03 but omitted required cancellation count41; no false zero-cancellation claim. Runtime tool guard passed; stricter evaluator failed.",
+      "elapsed_seconds": 49.507
+    },
+    {
+      "case": "P3-KPI",
+      "parent_execution_id": 93,
+      "core_execution_id": 94,
+      "workflow_url": "http://127.0.0.1:15690/workflow/p3-mcp-agent-core-v1/executions/94",
+      "runtime_guard_status": "PASS",
+      "metrics": {
+        "Tool Selection Accuracy": true,
+        "Factual Correctness": true,
+        "Citation Validity": null,
+        "Schema Compliance": true,
+        "Pass Rate": true
+      },
+      "actual_agent_tools": [
+        "MCP_Client_Tool_get_sales_kpis"
+      ],
+      "request_response_count": 1,
+      "response_contract": "read-only p2-read-tool-v1",
+      "elapsed_seconds": 50.263
+    },
+    {
+      "case": "P3-Combined",
+      "parent_execution_id": 95,
+      "core_execution_id": 96,
+      "workflow_url": "http://127.0.0.1:15690/workflow/p3-mcp-agent-core-v1/executions/96",
+      "runtime_guard_status": "error",
+      "metrics": {
+        "Tool Selection Accuracy": true,
+        "Factual Correctness": false,
+        "Citation Validity": null,
+        "Schema Compliance": false,
+        "Pass Rate": false
+      },
+      "actual_agent_tools": [
+        "MCP_Client_Tool_get_sales_kpis",
+        "MCP_Client_Tool_get_data_quality"
+      ],
+      "request_response_count": 2,
+      "response_contract": "read-only p2-read-tool-v1",
+      "limitation": "Both MCP calls succeeded; model changed Cancellation magnitude label to Cancellation magnitude gbp and omitted Missing customer sale rows. Existing runtime guard rejected the answer.",
+      "elapsed_seconds": 68.245
+    },
+    {
+      "case": "P4-KPI",
+      "parent_execution_id": 97,
+      "core_execution_id": 98,
+      "workflow_url": "http://127.0.0.1:15690/workflow/p4-rag-core-v1/executions/98",
+      "runtime_guard_status": "PASS",
+      "metrics": {
+        "Tool Selection Accuracy": null,
+        "Factual Correctness": true,
+        "Citation Validity": true,
+        "Schema Compliance": true,
+        "Pass Rate": true
+      },
+      "source_ids": [
+        "kpi-dictionary"
+      ],
+      "citations": [
+        "kpi-dictionary#0"
+      ],
+      "actual_model_context_verified": true,
+      "actual_model_response_verified": true,
+      "query_embedding_dimensions": 384,
+      "elapsed_seconds": 74.009
+    },
+    {
+      "case": "P4-Cancellations",
+      "parent_execution_id": 99,
+      "core_execution_id": 100,
+      "workflow_url": "http://127.0.0.1:15690/workflow/p4-rag-core-v1/executions/100",
+      "runtime_guard_status": "PASS",
+      "metrics": {
+        "Tool Selection Accuracy": null,
+        "Factual Correctness": true,
+        "Citation Validity": true,
+        "Schema Compliance": true,
+        "Pass Rate": true
+      },
+      "source_ids": [
+        "kpi-dictionary",
+        "data-contract"
+      ],
+      "citations": [
+        "kpi-dictionary#0",
+        "data-contract#1",
+        "data-contract#2"
+      ],
+      "actual_model_context_verified": true,
+      "actual_model_response_verified": true,
+      "query_embedding_dimensions": 384,
+      "elapsed_seconds": 61.944
+    },
+    {
+      "case": "P4-Combined",
+      "parent_execution_id": 101,
+      "core_execution_id": 102,
+      "workflow_url": "http://127.0.0.1:15690/workflow/p4-rag-core-v1/executions/102",
+      "runtime_guard_status": "PASS",
+      "metrics": {
+        "Tool Selection Accuracy": null,
+        "Factual Correctness": true,
+        "Citation Validity": true,
+        "Schema Compliance": true,
+        "Pass Rate": true
+      },
+      "source_ids": [
+        "kpi-dictionary",
+        "data-contract"
+      ],
+      "citations": [
+        "kpi-dictionary#0",
+        "kpi-dictionary#1",
+        "data-contract#1",
+        "kpi-dictionary#2"
+      ],
+      "actual_model_context_verified": true,
+      "actual_model_response_verified": true,
+      "query_embedding_dimensions": 384,
+      "elapsed_seconds": 86.763,
+      "visible_native_model_call_count": 2,
+      "visible_native_parser_call_count": 2,
+      "n8n_visible_result": "PASS; model answer and both source IDs displayed in the Validate sources node"
+    }
+  ],
+  "P1_read_only_availability": {
+    "api_health": {
+      "status": 200,
+      "request_id": "f2366e0d-ac20-47fe-bbe4-20d260c1b85b",
+      "matching_JSON_log": true
+    },
+    "api_ready": {
+      "status": 200,
+      "request_id": "ca78b17e-846a-4293-a88b-23cea7730c61",
+      "matching_JSON_log": true
+    },
+    "n8n": {
+      "status": 200,
+      "request_id": null
+    },
+    "approval_health": {
+      "status": 200,
+      "request_id": null
+    },
+    "approval_portal": {
+      "status": 200,
+      "request_id": null
+    },
+    "log_known_secret_scan": "PASS"
+  },
+  "components": {
+    "P2_logging": {
+      "status": 200,
+      "request_id": "6f9c1296-d39b-4035-b31f-73689391616d",
+      "access": "read-only",
+      "matching_JSON_log": true
+    },
+    "MCP_discovery": {
+      "tools": [
+        {
+          "name": "get_sales_kpis",
+          "readOnly": true,
+          "destructive": false
+        },
+        {
+          "name": "get_data_quality",
+          "readOnly": true,
+          "destructive": false
+        }
+      ]
+    },
+    "pgvector": {
+      "pgvector": "0.8.7",
+      "chunks": 6,
+      "dimensions": 384,
+      "sources": 2,
+      "nonzero": true
+    },
+    "known_secrets_in_API_log": false
+  },
+  "logs": {
+    "raa-p1-demo-api-1": {
+      "known_secret_scan": "PASS",
+      "oom_error_detected": false
+    },
+    "raa-p1-demo-n8n-1": {
+      "known_secret_scan": "PASS",
+      "oom_error_detected": false
+    },
+    "raa-p2-demo-ollama-1": {
+      "known_secret_scan": "PASS",
+      "oom_error_detected": false
+    },
+    "raa-p4-demo-rag-postgres-1": {
+      "known_secret_scan": "PASS",
+      "oom_error_detected": false
+    }
+  },
+  "OOMKilled": false,
+  "old_executions_6_8_retained": true,
+  "raw_execution_exports_published": false,
+  "manual_pending": [
+    "Owner inspection of fresh execution node data and presentation",
+    "Fresh Approve/Reject decisions for video were not run: current P1 scope was read-only",
+    "Video/screen privacy review before recording"
+  ],
+  "limitations": [
+    "Bounded evaluator checks are not a held-out general accuracy benchmark",
+    "Dedicated API correlation does not establish distributed tracing",
+    "P2 pre-redirection process stdout was not captured in Docker logs; later P2 requests were verified",
+    "Hosted GitHub CI and Postman manual import remain unverified"
+  ],
+  "RAM": {
+    "observed_Ollama_peak_GiB": 3.737,
+    "observed_n8n_peak_MiB": 585.5,
+    "lowest_sampled_Windows_free_GiB": 3.304,
+    "measurement": "Point-in-time docker stats and Windows CIM samples, not continuous peak profiling"
+  },
+  "observed_demo_containers_running": 7,
+  "n8n_visible_execution_verified": [
+    102
+  ]
+}

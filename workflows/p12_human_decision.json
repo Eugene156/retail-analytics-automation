@@ -1,0 +1,93 @@
+{
+  "id": "p12-human-decision-v1",
+  "name": "P1.2 Human Decision and Local Publication",
+  "active": false,
+  "nodes": [
+    {
+      "id": "p12-hook",
+      "name": "Committed Human Decision",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "106e4a7b-da8c-499e-805d-1e364cfec449",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "p12-decision",
+        "authentication": "none",
+        "responseMode": "lastNode",
+        "options": {
+          "ipWhitelist": "__DEMO_APPROVAL_IPS__"
+        }
+      }
+    },
+    {
+      "id": "p12-advance",
+      "name": "Publish only approved report",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://approval:8000/api/demo/advance",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({request_id:$json.body.request_id}) }}",
+        "options": {
+          "timeout": 35000
+        }
+      }
+    },
+    {
+      "id": "p12-result",
+      "name": "Human Approval result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return [{json:{...$json,n8n_execution_id:$execution.id}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Committed Human Decision": {
+      "main": [
+        [
+          {
+            "node": "Publish only approved report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish only approved report": {
+      "main": [
+        [
+          {
+            "node": "Human Approval result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 120,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {}
+}

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="csrf-token" content="__CSRF__"><title>Human Approval · Retail Analytics Automation</title>
+<link rel="stylesheet" href="/portal/f2/assets/overview.css"><link rel="stylesheet" href="/portal/f2/assets/f2.css">
+<script src="/portal/f2/assets/f2.js" defer></script></head><body>
+<aside class="sidebar"><a class="brand" href="http://127.0.0.1:18090/overview">Retail Analytics<br>Automation</a>
+<nav><a class="nav-item" href="http://127.0.0.1:18090/overview">Overview</a><a class="nav-item active" href="/portal/f2" aria-current="page">Human Approval</a>
+<a class="nav-item" href="http://127.0.0.1:18090/overview#ai-agent">AI Agent</a><a class="nav-item" href="http://127.0.0.1:18090/overview#mcp-analytics">MCP Analytics</a><a class="nav-item" href="http://127.0.0.1:18090/overview#knowledge-assistant">Knowledge Assistant</a><a class="nav-item" href="http://127.0.0.1:18090/overview#api-ci">API &amp; CI</a></nav>
+<div class="sidebar-bottom"><a href="/portal">Protected owner portal</a></div></aside>
+<div class="workspace"><header class="topbar"><div class="breadcrumb">Workspace / <strong>Human Approval</strong></div></header>
+<main><section class="hero"><div class="hero-copy"><p class="eyebrow">HUMAN OVERSIGHT</p><h1>Reports. Review. <span>Control.</span></h1>
+<p class="hero-description">Create a verified report, inspect its evidence, then decide in the protected owner portal.</p></div></section>
+<ol class="f2-steps" aria-label="Approval process"><li aria-current="step">1 · Create Report</li><li>2 · Review Request</li><li>3 · Owner Sign-in</li><li>4 · Approve / Reject</li><li>5 · Final Result</li></ol>
+<section class="f2-panel"><h2>Create a report</h2><p>The existing P1 workflow uses its fixed historical sales window. Creation never approves or publishes.</p>
+<button id="create" type="button">Create Report</button><button id="refresh" type="button" hidden>Refresh saved state</button>
+<button id="new" type="button" hidden>Create another report</button>
+<p id="notice" role="status" aria-live="polite">Ready for an explicit creation request.</p></section>
+<section class="f2-panel"><h2>Current request</h2><dl id="details"><dt>State</dt><dd>No operation selected</dd></dl>
+<a id="review" href="/portal" hidden>Open protected review · Approve / Reject</a>
+<details id="report" hidden><summary>Verified report preview</summary><pre id="preview"></pre></details>
+<details id="receipt" hidden><summary>Confirmed decision / publication receipt</summary><pre id="receipt-text"></pre></details>
+<p>Approve / Reject require owner authentication and confirmation for the exact report version. Publication remains subject to the existing guards.</p></section>
+<p class="evidence-footnote">Local portfolio demonstration using isolated historical data.</p></main></div></body></html>

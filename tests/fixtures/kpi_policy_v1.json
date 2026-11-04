@@ -1,0 +1,64 @@
+{
+  "fixture_id": "kpi-policy-v1-golden",
+  "kind": "synthetic hand-checked test data; not UCI source rows",
+  "currency": "GBP",
+  "rows": [
+    {"source_row_number": 2, "invoice_no": "100", "stock_code": "A", "quantity": 2, "unit_price_gbp": "1.25", "customer_id": null, "invoice_datetime_raw": "2010-12-01T09:00:00", "classification": "sale"},
+    {"source_row_number": 3, "invoice_no": "100", "stock_code": "B", "quantity": 1, "unit_price_gbp": "0.10", "customer_id": "10", "invoice_datetime_raw": "2010-12-01T09:00:00", "classification": "sale"},
+    {"source_row_number": 4, "invoice_no": "101", "stock_code": "C", "quantity": 3, "unit_price_gbp": "2.00", "customer_id": "10", "invoice_datetime_raw": "2010-12-01T10:00:00", "classification": "sale"},
+    {"source_row_number": 5, "invoice_no": "C100", "stock_code": "A", "quantity": -1, "unit_price_gbp": "1.25", "customer_id": "10", "invoice_datetime_raw": "2010-12-01T11:00:00", "classification": "cancellation"},
+    {"source_row_number": 6, "invoice_no": "102", "stock_code": "A", "quantity": -2, "unit_price_gbp": "1.00", "customer_id": null, "invoice_datetime_raw": "2010-12-01T12:00:00", "classification": "other_adjustment"},
+    {"source_row_number": 7, "invoice_no": "103", "stock_code": "A", "quantity": 1, "unit_price_gbp": "-5.00", "customer_id": "10", "invoice_datetime_raw": "2010-12-01T13:00:00", "classification": "invalid"},
+    {"source_row_number": 8, "invoice_no": "103", "stock_code": "D", "quantity": 2, "unit_price_gbp": "0", "customer_id": null, "invoice_datetime_raw": "2010-12-01T14:00:00", "classification": "sale"},
+    {"source_row_number": 9, "invoice_no": "104", "stock_code": "E", "quantity": 1, "unit_price_gbp": "9.00", "customer_id": "11", "invoice_datetime_raw": "2010-12-02T00:00:00", "classification": "sale"}
+  ],
+  "periods": [
+    {
+      "name": "first_day",
+      "start_inclusive": "2010-12-01T00:00:00",
+      "end_exclusive": "2010-12-02T00:00:00",
+      "expected": {
+        "sale_rows": 4,
+        "cancellation_rows": 1,
+        "other_adjustment_rows": 1,
+        "invalid_rows": 1,
+        "sales_value_gbp": "8.60",
+        "cancellation_magnitude_gbp": "1.25",
+        "net_recorded_sales_gbp": "7.35",
+        "other_adjustment_signed_gbp": "-2.00",
+        "invalid_signed_gbp": "-5.00",
+        "sales_invoice_count": 3,
+        "average_sales_invoice_value_exact": "43/15",
+        "active_identified_customers": 1,
+        "customer_coverage_exact": "1/2",
+        "units_sold": 8,
+        "cancellation_to_sales_value_ratio_exact": "25/172"
+      }
+    },
+    {
+      "name": "boundary_day",
+      "start_inclusive": "2010-12-02T00:00:00",
+      "end_exclusive": "2010-12-03T00:00:00",
+      "expected": {
+        "sale_rows": 1,
+        "sales_value_gbp": "9.00",
+        "sales_invoice_count": 1,
+        "average_sales_invoice_value_exact": "9",
+        "units_sold": 1
+      }
+    },
+    {
+      "name": "empty_day",
+      "start_inclusive": "2010-12-03T00:00:00",
+      "end_exclusive": "2010-12-04T00:00:00",
+      "expected": {
+        "sale_rows": 0,
+        "sales_value_gbp": "0",
+        "sales_invoice_count": 0,
+        "average_sales_invoice_value_exact": null,
+        "cancellation_to_sales_value_ratio_exact": null,
+        "units_sold": 0
+      }
+    }
+  ]
+}

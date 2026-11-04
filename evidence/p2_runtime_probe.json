@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-10",
+  "status": "verified-in-current-environment",
+  "scope": "P2 runtime and actual tool-calling probe; n8n agent workflow not implemented",
+  "model": "qwen3:4b-instruct",
+  "ollama_image": "0.34.1",
+  "tool_call": {"name": "get_demo_api_health", "arguments": {}},
+  "actual_tool_result": {"status": "ok"},
+  "model_response": "The demo API is currently healthy.",
+  "warm_probe_elapsed_seconds": 3.79,
+  "ollama_memory_gib": 3.051,
+  "other_demo_containers_memory_mib": 406.208,
+  "windows_free_memory_gib": 3.49,
+  "inference_sample_cpu_percent": 595.67,
+  "oom_killed": false,
+  "container_restarts": 0,
+  "ollama_published_ports": [],
+  "ollama_network": "raa-p1-demo_default (internal)",
+  "model_mount_read_only": true,
+  "initial_probe": "Model selected the tool; protected /readyz returned 401. Corrected probe to public /healthz; no guards changed.",
+  "next_action": "Implement bounded n8n AI Agent with read-only Sales KPIs and Data Quality tools after owner resumes."
+}

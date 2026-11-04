@@ -1,0 +1,506 @@
+{
+  "id": "p12-report-core-v2",
+  "name": "P1.2 Report Core - Integrated Only",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "wp3-manual",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "if ($execution.mode !== 'production') throw new Error('Use P1.2 Create Report; direct HTTP workflow testing is blocked');\nreturn [{json: {idempotency_key: ('p12-report-' + $execution.id), request: {source_file_sha256: 'BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980', source_time_interpretation: 'Europe/London-assumed', period_start_inclusive: '2011-01-28T09:00:00Z', period_end_exclusive: '2011-01-28T10:00:00Z', source_as_of_exclusive: '2011-01-28T10:00:00Z'}, expected_source_window: {period_start_inclusive: '2011-01-28T09:00:00.000000', period_end_exclusive: '2011-01-28T10:00:00.000000', source_as_of_exclusive: '2011-01-28T10:00:00.000000'}}}];"
+      },
+      "id": "wp3-prepare",
+      "name": "Prepare request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/api/v1/report-requests",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Idempotency-Key",
+              "value": "={{ $('Prepare request').first().json.idempotency_key }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Prepare request').first().json.request) }}",
+        "options": {
+          "timeout": 125000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": false
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text",
+              "outputPropertyName": "body_text"
+            }
+          }
+        }
+      },
+      "id": "wp3-submit",
+      "name": "Submit request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ],
+      "onError": "continueRegularOutput",
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const response = $input.first().json;\nconst attempt = $runIndex + 1;\nconst plan = $('Prepare request').first().json;\nconst status = Number.isInteger(response.statusCode) ? response.statusCode : null;\nlet cid = null;\nfor (let i = 0; i < $runIndex && i < 3; i++) { try { const prior = $('Evaluate request').first(0, i).json; if (prior.case_id) cid = prior.case_id; } catch {} }\nconst result = {attempt, status_code: status, case_id: cid, ready: false, retry: false, reason: 'request_failed'};\nconst uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;\nif (status === 200 || status === 202) {\n  let body; try { body = JSON.parse(response.body_text); } catch { result.reason = 'invalid_case_response'; return [{json: result}]; }\n  const identity = body && body.request;\n  const valid = body && uuid.test(body.case_id) && body.approved === false && body.published === false && identity && identity.contract_version === 'report-request-v1' && identity.policy_version === 'v1' && identity.report_schema_version === 'deterministic-comparison-report-v1' && identity.source_file_sha256 === plan.request.source_file_sha256 && identity.source_time_interpretation === plan.request.source_time_interpretation && Object.entries(plan.expected_source_window).every(([k,v]) => identity[k] === v);\n  if (!valid || (cid && cid !== body.case_id)) { result.reason = 'case_identity_mismatch'; return [{json: result}]; }\n  result.case_id = body.case_id;\n  if (status === 200) {\n    if (body.state !== 'awaiting_approval' || body.revision !== 1 || body.schema_version !== 'deterministic-comparison-report-v1' || !/^[a-f0-9]{64}$/.test(body.payload_sha256)) { result.reason = 'invalid_stored_revision'; return [{json: result}]; }\n    result.ready = true; result.payload_sha256 = body.payload_sha256; result.reason = 'draft_stored'; return [{json: result}];\n  }\n  if (body.state !== 'received' || body.revision !== null) { result.reason = 'invalid_pending_case'; return [{json: result}]; }\n}\nconst retryable = status === 202 || status === 429 || status === 503 || status === 504;\nif (!retryable) { result.reason = status === null ? 'transport_failure_manual_recovery' : 'permanent_HTTP_failure'; return [{json: result}]; }\nif (attempt >= 3) { result.reason = 'retry_exhausted_manual_recovery'; return [{json: result}]; }\nlet seconds = 5 * (2 ** (attempt - 1));\nconst header = Object.entries(response.headers || {}).find(([k]) => k.toLowerCase() === 'retry-after');\nif (header && typeof header[1] === 'string') {\n  const raw = header[1].trim();\n  if (/^\\d+$/.test(raw)) { seconds = Number(raw); }\n  else if (/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{2}:\\d{2}:\\d{2} GMT$/.test(raw)) { const time = Date.parse(raw); if (Number.isFinite(time)) seconds = Math.max(0, Math.ceil((time - Date.now()) / 1000)); }\n}\nif (!Number.isFinite(seconds) || seconds > 60) { result.reason = 'retry_after_exceeds_local_bound'; return [{json: result}]; }\nresult.retry = true; result.wait_seconds = Math.max(1, seconds); result.reason = 'bounded_retry';\nreturn [{json: result}];"
+      },
+      "id": "wp3-evaluate",
+      "name": "Evaluate request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ready-condition",
+              "leftValue": "={{ $json.ready }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "wp3-ready",
+      "name": "Request complete?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "retry-condition",
+              "leftValue": "={{ $json.retry }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "wp3-retry",
+      "name": "Retry permitted?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": "={{ $json.wait_seconds }}",
+        "unit": "seconds"
+      },
+      "id": "wp3-wait",
+      "name": "Bounded backoff",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "errorType": "errorMessage",
+        "errorMessage": "={{ JSON.stringify({ reason: $json.reason, attempts: $json.attempt, case_id: $json.case_id, status_code: $json.status_code, recovery: 'Inspect the case and repeat the same request key after correcting the cause. No approval or publication is enabled.' }) }}"
+      },
+      "id": "wp3-stop",
+      "name": "Stop for operator recovery",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'http://api:8000/api/v1/cases/' + $json.case_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 10000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": false
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text",
+              "outputPropertyName": "body_text"
+            }
+          }
+        }
+      },
+      "id": "wp3-read-case",
+      "name": "Read case",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        0
+      ],
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const response = $input.first().json;\nconst plan = $('Prepare request').first().json;\nlet receipt;\nfor (let i = 0; i < 3; i++) { try { const value = $('Evaluate request').first(0, i).json; if (value.ready) receipt = value; } catch {} }\nlet body; try { body = JSON.parse(response.body_text); } catch { throw new Error('Invalid case metadata'); }\nif (response.statusCode !== 200 || !receipt || body.case_id !== receipt.case_id || body.state !== 'awaiting_approval' || body.revision !== 1 || body.approved !== false || body.published !== false || body.payload_sha256 !== receipt.payload_sha256 || body.schema_version !== 'deterministic-comparison-report-v1' || !body.request || body.request.source_file_sha256 !== plan.request.source_file_sha256 || body.request.policy_version !== 'v1' || body.request.source_time_interpretation !== plan.request.source_time_interpretation || !Object.entries(plan.expected_source_window).every(([k,v]) => body.request[k] === v) || !Array.isArray(body.audit_events) || body.audit_events.length !== 2) throw new Error('Stored case contract mismatch');\nreturn [{json: {case_id: body.case_id, revision: body.revision, expected_payload_sha256: body.payload_sha256, audit_event_ids: body.audit_events.map(event => event.event_id), request_attempts: receipt.attempt, idempotency_key: plan.idempotency_key, n8n_execution_id: $execution.id ?? null}}];"
+      },
+      "id": "wp3-validate-case",
+      "name": "Validate stored case",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'http://api:8000/api/v1/cases/' + $json.case_id + '/revisions/1' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 10000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": false
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "file",
+              "outputPropertyName": "draft_bytes"
+            }
+          }
+        }
+      },
+      "id": "wp3-read-draft",
+      "name": "Read unapproved draft",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ],
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item = $input.first();\nconst response = item.json;\nconst metadata = $('Validate stored case').first().json;\nconst headers = Object.fromEntries(Object.entries(response.headers || {}).map(([k,v]) => [k.toLowerCase(),v]));\nconst length = headers['content-length'];\nif (response.statusCode !== 200 || headers['x-report-status'] !== 'unapproved-draft' || headers['x-source-time-interpretation'] !== 'Europe/London-assumed' || !/^[1-9]\\d*$/.test(String(length)) || Number(length) > 65536 || !item.binary?.draft_bytes) throw new Error('Invalid unapproved draft response');\nreturn [{json: {...metadata}, binary: item.binary}];"
+      },
+      "id": "wp3-prepare-hash",
+      "name": "Preserve exact draft bytes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "action": "hash",
+        "type": "SHA256",
+        "binaryData": true,
+        "binaryPropertyName": "draft_bytes",
+        "dataPropertyName": "actual_payload_sha256",
+        "encoding": "hex"
+      },
+      "id": "wp3-hash",
+      "name": "SHA256 exact draft bytes",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item = $input.first();\nconst value = item.json;\nif (!/^[a-f0-9]{64}$/.test(value.actual_payload_sha256) || value.actual_payload_sha256 !== value.expected_payload_sha256) throw new Error('Immutable draft hash mismatch');\nreturn [{json: {status: 'unapproved_draft_verified', case_id: value.case_id, revision: value.revision, payload_sha256: value.actual_payload_sha256, audit_event_ids: value.audit_event_ids, request_attempts: value.request_attempts, idempotency_key: value.idempotency_key, n8n_execution_id: value.n8n_execution_id, ai_mode: 'disabled', approval: 'not_enabled', publication: 'not_enabled'}, binary: item.binary}];"
+      },
+      "id": "wp3-verified",
+      "name": "Verified unapproved draft",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "id": "p12-register",
+      "name": "Open Human Approval request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2420,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://approval:8000/api/demo/register",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({case_id:$json.case_id,report_sha256:$json.payload_sha256}) }}",
+        "options": {
+          "timeout": 35000
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare request": {
+      "main": [
+        [
+          {
+            "node": "Submit request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submit request": {
+      "main": [
+        [
+          {
+            "node": "Evaluate request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate request": {
+      "main": [
+        [
+          {
+            "node": "Request complete?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request complete?": {
+      "main": [
+        [
+          {
+            "node": "Read case",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Retry permitted?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry permitted?": {
+      "main": [
+        [
+          {
+            "node": "Bounded backoff",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop for operator recovery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bounded backoff": {
+      "main": [
+        [
+          {
+            "node": "Submit request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read case": {
+      "main": [
+        [
+          {
+            "node": "Validate stored case",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate stored case": {
+      "main": [
+        [
+          {
+            "node": "Read unapproved draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read unapproved draft": {
+      "main": [
+        [
+          {
+            "node": "Preserve exact draft bytes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preserve exact draft bytes": {
+      "main": [
+        [
+          {
+            "node": "SHA256 exact draft bytes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SHA256 exact draft bytes": {
+      "main": [
+        [
+          {
+            "node": "Verified unapproved draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verified unapproved draft": {
+      "main": [
+        [
+          {
+            "node": "Open Human Approval request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "executionTimeout": 600,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromAList",
+    "callerIds": "p12-create-report-v1"
+  },
+  "pinData": {}
+}

@@ -1,0 +1,868 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Retail Analytics Demo REST Contract",
+    "version": "0.1.0-p5c",
+    "description": "Reviewed documentation projection of the authenticated FastAPI contract inspected2026-10-11. Eight paths only; owner-review, approval, publication and internal tool routes are intentionally omitted. It does not change runtime authorization or business behavior."
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:18090",
+      "description": "Owner isolated demo only; configure base_url in Postman."
+    }
+  ],
+  "paths": {
+    "/healthz": {
+      "get": {
+        "summary": "Health",
+        "operationId": "get_0",
+        "description": "Does not change business state.",
+        "x-state-changing": false,
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/readyz": {
+      "get": {
+        "summary": "Authenticated readiness",
+        "operationId": "get_1",
+        "description": "Does not change business state.",
+        "x-state-changing": false,
+        "security": [
+          {
+            "CalculationToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Readiness"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized; authentication occurs before body validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database/policy unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "summary": "Authenticated runtime contract",
+        "operationId": "get_2",
+        "description": "Does not change business state.",
+        "x-state-changing": false,
+        "security": [
+          {
+            "CalculationToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenApiDocument"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized; authentication occurs before body validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database/policy unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/calculations/comparison": {
+      "post": {
+        "summary": "Read-only SQL comparison",
+        "operationId": "post_3",
+        "description": "Read-only. POST calculation uses fixed SQL and does not create a case.",
+        "x-state-changing": false,
+        "security": [
+          {
+            "CalculationToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComparisonReport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized; authentication occurs before body validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database/policy unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Actual request body exceeds8192 bytes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Busy; Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "SQL timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalculationRequest"
+              },
+              "example": {
+                "source_file_sha256": "BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980",
+                "source_time_interpretation": "Europe/London-assumed",
+                "period_start_inclusive": "2011-01-28T09:00:00Z",
+                "period_end_exclusive": "2011-01-28T10:00:00Z",
+                "source_as_of_exclusive": "2011-01-28T10:00:00Z"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/report-requests": {
+      "post": {
+        "summary": "STATE CHANGING: persist a report draft",
+        "operationId": "post_4",
+        "description": "Requires separate owner authorization and a fresh Idempotency-Key; creates state, not approval/publication.",
+        "x-state-changing": true,
+        "security": [
+          {
+            "CalculationToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized; authentication occurs before body validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database/policy unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Actual request body exceeds8192 bytes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Busy; Retry-After",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "SQL timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Stored/in progress; repeat the SAME key/payload to resume. Location and Retry-After supplied.",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseMetadata"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Key bound to another payload or source validation conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalculationRequest"
+              },
+              "example": {
+                "source_file_sha256": "BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980",
+                "source_time_interpretation": "Europe/London-assumed",
+                "period_start_inclusive": "2011-01-28T09:00:00Z",
+                "period_end_exclusive": "2011-01-28T10:00:00Z",
+                "source_as_of_exclusive": "2011-01-28T10:00:00Z"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{8,128}$"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/cases/{case_id}": {
+      "get": {
+        "summary": "Read existing case",
+        "operationId": "get_5",
+        "description": "Does not change business state.",
+        "x-state-changing": false,
+        "security": [
+          {
+            "CalculationToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized; authentication occurs before body validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database/policy unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Case/revision not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Case Id"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/cases/{case_id}/revisions/{revision}": {
+      "get": {
+        "summary": "Read immutable revision",
+        "operationId": "get_6",
+        "description": "Does not change business state.",
+        "x-state-changing": false,
+        "security": [
+          {
+            "CalculationToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComparisonReport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized; authentication occurs before body validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database/policy unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Case/revision not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Revision"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/cases/{case_id}/revisions/{revision}/preview": {
+      "get": {
+        "summary": "Read HTML preview",
+        "operationId": "get_7",
+        "description": "Does not change business state.",
+        "x-state-changing": false,
+        "security": [
+          {
+            "CalculationToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Validated HTML draft preview",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized; authentication occurs before body validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database/policy unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Case/revision not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Revision"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CalculationRequest": {
+        "properties": {
+          "source_file_sha256": {
+            "type": "string",
+            "const": "BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980",
+            "title": "Source File Sha256"
+          },
+          "source_time_interpretation": {
+            "type": "string",
+            "const": "Europe/London-assumed",
+            "title": "Source Time Interpretation"
+          },
+          "period_start_inclusive": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Period Start Inclusive"
+          },
+          "period_end_exclusive": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Period End Exclusive"
+          },
+          "source_as_of_exclusive": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Source As Of Exclusive"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "source_file_sha256",
+          "source_time_interpretation",
+          "period_start_inclusive",
+          "period_end_exclusive",
+          "source_as_of_exclusive"
+        ],
+        "title": "CalculationRequest",
+        "description": "RFC3339 offsets required; start < end <= cutoff; maximum31 days; fixed source hash/time assumption; historical years2009-2011; ambiguous/nonexistent/DST-crossing windows rejected. Unknown fields rejected.",
+        "examples": [
+          {
+            "source_file_sha256": "BCBE73B35F5B7BABF197FB0CB983A11F5D9FF929078D4AA53D171B1F2DF2E980",
+            "source_time_interpretation": "Europe/London-assumed",
+            "period_start_inclusive": "2011-01-28T09:00:00Z",
+            "period_end_exclusive": "2011-01-28T10:00:00Z",
+            "source_as_of_exclusive": "2011-01-28T10:00:00Z"
+          }
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "detail"
+        ]
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "Readiness": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "ReportPeriod": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "kpis": {
+            "type": "object",
+            "properties": {
+              "sale_rows": {
+                "type": "number"
+              },
+              "sales_value_gbp": {
+                "type": "number"
+              },
+              "net_recorded_sales_gbp": {
+                "type": "number"
+              },
+              "cancellation_rows": {
+                "type": "number"
+              },
+              "cancellation_magnitude_gbp": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "sale_rows",
+              "sales_value_gbp",
+              "net_recorded_sales_gbp",
+              "cancellation_rows",
+              "cancellation_magnitude_gbp"
+            ]
+          },
+          "quality": {
+            "type": "object",
+            "properties": {
+              "finding_rows": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "flagged_source_rows": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "finding_rows",
+              "flagged_source_rows"
+            ]
+          }
+        },
+        "required": [
+          "schema_version",
+          "kpis",
+          "quality"
+        ]
+      },
+      "ComparisonReport": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "enum": [
+              "deterministic-comparison-report-v1"
+            ]
+          },
+          "current_period": {
+            "$ref": "#/components/schemas/ReportPeriod"
+          },
+          "prior_period": {
+            "$ref": "#/components/schemas/ReportPeriod"
+          },
+          "changes": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "schema_version",
+          "current_period",
+          "prior_period",
+          "changes"
+        ],
+        "description": "Minimum documented response shape; SQL preserves NUMERIC as JSON numbers. Additional report/provenance fields are retained. Examples are synthetic, not execution evidence."
+      },
+      "CaseMetadata": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string"
+          },
+          "revision": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "case_id",
+          "state",
+          "revision"
+        ]
+      },
+      "OpenApiDocument": {
+        "type": "object",
+        "properties": {
+          "openapi": {
+            "type": "string"
+          },
+          "info": {
+            "type": "object"
+          },
+          "paths": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "openapi",
+          "info",
+          "paths"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "CalculationToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Fresh demo token, supplied locally; never export filled credentials."
+      }
+    }
+  }
+}
