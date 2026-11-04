@@ -5,14 +5,27 @@ over what gets published. This project turns historical transactions into
 SQL-validated reports, adds AI-assisted analysis through read-only tools, MCP and
 RAG, and keeps publication behind an explicit human decision.
 
-Built as an AI / Business Automation Specialist portfolio, it combines a six-page
-local website with working n8n, FastAPI, PostgreSQL and Ollama workflows. Human
-Approval supports controlled local actions; the AI, MCP and RAG pages present
-results from verified historical executions. Reviewers can explore the video,
-screenshots, source and evidence without installing the system.
+A Business Analyst / System Analyst and AI Automation portfolio, it connects
+business rules, requirements and acceptance criteria to a working local reporting
+system. Human Approval supports controlled local actions; the AI, MCP and RAG
+pages present results from verified historical executions.
+
+**The public demonstration is the video and screenshots below.** The interactive
+website runs locally; there is no publicly hosted interactive application.
+Reviewers do not need to install the system.
 
 **[Watch the demo video](media/Retail_Analytics_Automation_Demo_GitHub.mp4)**
 — 1 minute 51 seconds · MP4 · 3.98 MiB.
+
+## Start Here — Business & System Analysis
+
+| Deliverable | What to review |
+| --- | --- |
+| [Business analysis](docs/BUSINESS_ANALYSIS.md) | Problem, illustrative AS-IS, delivered TO-BE, decisions and assumptions |
+| [Requirements traceability](docs/REQUIREMENTS_MATRIX.md) | Delivered, partial and unverified scope with public evidence |
+| [Acceptance criteria](ACCEPTANCE.md) | Bounded acceptance outcomes and retained original criteria |
+| [KPI dictionary](docs/KPI_DICTIONARY.md) | Definitions, denominators, exclusions and monetary rules |
+| [Architecture](#architecture-and-stack) | System boundaries, technology choices and human controls |
 
 ![Retail Analytics Automation Overview](media/01-overview.png)
 
@@ -47,6 +60,20 @@ All six pages have passed local functional checks and owner visual review.
 
 F3–F5 selectors do not invoke an LLM or start a workflow. Raw technical payloads
 are collapsed; evidence remains available for inspection.
+
+## My Role & AI Assistance
+
+- **Human ownership:** the project owner controls scope, business-rule decisions
+  and acceptance. Recorded manual verification includes local Approve/Reject,
+  review of P2 #104/P3 #106 and website visual acceptance.
+- **AI assistance:** implementation, documentation and automated verification
+  were developed with AI/Codex assistance. Automated checks and saved execution
+  evidence are distinct from the owner's manual decisions.
+
+This is an owner-led portfolio exercise, not client work or evidence of stakeholder
+interviews. No independent authorship of all code or measured business impact is
+claimed. See [analysis context](docs/BUSINESS_ANALYSIS.md) and
+[verification evidence](#verified-tests-and-evidence).
 
 ## Architecture and stack
 
