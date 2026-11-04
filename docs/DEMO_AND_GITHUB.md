@@ -1,29 +1,71 @@
-# GitHub publication and demonstration
+# Published portfolio and local demonstration
 
-## Canonical repository
+Status: published and CI-verified on 4 November 2026.
 
-The owner supplies GitHub account, repository name and visibility. A suggested slug is `retail-analytics-automation`; it is not an existing URL. Code, workflow exports, migrations, deployment, tests and English documentation live together. Avoid shipping model weights, full archives, personal identifiers, secrets or raw sensitive logs in Git.
+## Public review entry points
 
-Once identity is known, initialise/reuse local Git, configure the owner's actual commit identity, perform a secret/artifact review, and create/push the chosen remote. GitHub access is not evidence that the product's GitHub integration has been tested.
+- [Repository](https://github.com/Eugene156/retail-analytics-automation)
+- [README: scope, architecture and local addresses](../README.md)
+- [Demo video](../media/Retail_Analytics_Automation_Demo_GitHub.mp4)
+- [Overview screenshot](../media/01-overview.png); the README links all six pages.
+- [Hosted CI: successful published commit](https://github.com/Eugene156/retail-analytics-automation/actions/runs/41799269037)
 
-## Lightweight importable workflow
+The repository contains 296 approved files, the MIT License, source, sanitized
+workflow definitions, six screenshots and the optimized video. Local CI passed
+56 pytest tests. No GitHub Release object or automatic deployment is claimed.
 
-Target: a compatible existing n8n instance. The reviewer selects `Import from URL` and pastes the raw GitHub JSON URL. This imports one workflow definition; it does not install services, grant cloud access or transfer account credentials. Confirm this route on the pinned supported version before publishing a working button/link.
+## What the demonstration proves
 
-Design the basic demo with a Manual Trigger, a small attributed slice of real archived data, JS transformations, branching, validation and a deterministic report. Include source row references/hash and explicitly name the restricted sample. Supply the slice from a verified actual download; do not fabricate retail rows to satisfy this contract.
+F1-F6 are complete. F2 supports controlled real report creation, authenticated
+owner decisions and local publication; creating a report grants no approval.
+F3-F5 display verified historical AI/MCP/RAG answers and tool/source evidence.
+The [requirement matrix](REQUIREMENTS_MATRIX.md) separates delivered capabilities
+from broader partial, deferred and unverified original requirements.
 
-The zero-credential demo may show pre-recorded AI output only if visibly labelled as recorded. It cannot count as working inference. A real optional AI branch requires the reviewer's own reachable model/provider setup. Do not assume n8n Cloud can reach the owner's `localhost` services.
+## Pinned policy documents and current status
 
-Acceptance: import into a fresh supported instance; execute the basic path; show correct sample metrics and a failure branch; use English labels/sticky notes; require no community/paid node or credential for the basic path. Test expected links to sub-workflows if the demo later expands, rather than assuming imported IDs automatically match.
+[DATA_CONTRACT.md](DATA_CONTRACT.md) and [KPI_DICTIONARY.md](KPI_DICTIONARY.md)
+are byte-pinned source snapshots for historical P4 embeddings/citations and the
+offline evaluator. Their original bytes are preserved by owner decision; editing
+status prose would invalidate the source hashes checked against saved evidence.
 
-An existing n8n Cloud account may have its own charges. The free complete deployment uses self-hosted Community; no perpetual free Cloud plan is promised.
+The data contract's statement that no end-to-end delivered report is claimed
+belongs to the earlier WP2 SQL milestone. P1/F2 subsequently implemented and tested
+report creation, owner review and local publication. F1-F6 are complete; the
+repository and media are public, with 56 local CI tests and successful hosted CI.
+That delivery does not establish the broader full point-in-time document/outcome
+replay described as future work in the frozen contract.
 
-## Full local product
+References inside those two snapshots to unpublished WP2/WP3 notes are private
+historical evidence, not accessible public documentation. Use the
+[current workflow inventory](../workflows/README.md),
+[canonical SQL notes](WP2_CANONICAL_KPIS.md),
+[SQL migrations](../db/migrations/008_canonical_period_kpis_v1.sql) and
+[current requirement statuses](REQUIREMENTS_MATRIX.md) for public navigation.
+No quotations, source hashes, embeddings, model outputs or acceptance receipts
+were regenerated for this documentation repair. A future corpus revision requires
+separately scoped versioning and evaluation; guards must not be relaxed.
 
-The final bootstrap should verify prerequisites, generate local secrets, fetch verified data and model artifacts, apply migrations, import/sanitise workflows, guide owner-account creation and verify health. A first download takes time and storage. Document tested commands after implementation. The full stack must work independently of the author's running computer.
+## Workflow portability and setup
 
-## Employer-facing evidence
+[Published workflow exports](../workflows/README.md) reference bounded APIs,
+sub-workflows and credentials. They do not contain portable credentials or a
+complete bootstrap. Import into a clean n8n instance, zero-credential execution,
+fresh-machine deployment/recovery and Postman GUI execution remain unverified.
+The original reduced-importable-demo and automatic-bootstrap goals are deferred;
+do not imply they are required or validated for reviewing the GitHub portfolio.
+Docker profiles, access/recovery material and secrets remain withheld.
 
-README starts with problem, result, role and caveats. Then show process, architecture, key workflow screenshots, acceptance evidence, measurement report, quick start and limits. A 2–3 minute English video should show a normal report, source evidence, approval, an intentional failure, recovery and measured results if available.
+The local interactive website requires the existing provisioned environment.
+Reviewers can use the published video, source and evidence without installing it.
+Do not run creation, approval or publication merely to check availability.
 
-Before publication check English-only project text, source/license attribution, sanitized credential references, reproducibility, evidence links, actual status, and no unsupported claims of live merchant deployment or ROI.
+## Media and attribution
+
+Six screenshots were visually reviewed. The owner reports representative review
+of 37 distinct video frames at three-second intervals; this is not exhaustive
+frame-by-frame verification. Demo request IDs and report hashes are visible.
+See the [license](../LICENSE), [third-party notices](../THIRD_PARTY_NOTICES.md) and
+[publication inventory](PUBLICATION_MANIFEST.md). Secrets, raw data, runtime state
+and private evidence are excluded. Any future media/code publication requires a
+new scoped review and owner authorization.

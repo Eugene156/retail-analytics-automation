@@ -1,5 +1,38 @@
 # Technology roadmap
 
+## Implemented stack (4 November 2026)
+
+The delivered portfolio uses the following components. F3-F5 are interactive views
+of historical execution evidence; the underlying local n8n workflows were tested.
+
+| Area | Delivered implementation | Public reference |
+| --- | --- | --- |
+| Website/API | FastAPI, Python, HTML/CSS and vanilla JavaScript; F1-F6 | [README](../README.md) |
+| Orchestration | n8n Community, parent/core workflows and native AI Agent | [Workflow inventory](../workflows/README.md) |
+| Facts/state | PostgreSQL, SQL NUMERIC, report/approval/admission ledgers | [Data-source clarification](DEMO_AND_GITHUB.md#pinned-policy-documents-and-current-status) |
+| Local model/tool calling | Ollama qwen3:4b-instruct, two bounded read-only tools | [Tool evidence](../evidence/p6_combined_repair.json) |
+| MCP | Supported n8n MCP Client Tool and lightweight loopback server | [Discovery evidence](../evidence/p3_mcp_discovery.json) |
+| RAG | all-minilm:22m embeddings, pgvector, retrieval before agent, checked citations | [RAG evidence](../evidence/p4_rag_runtime.json) |
+| Human control | Owner authentication, Host/Origin/CSRF, HMAC admission, durable outbox and guarded local publication | [F2 adapter](../api/f2_creation.py) |
+| Engineering | Structured outputs, offline AI evaluation, OpenAPI/Postman, JSON logging, Docker Compose and GitHub Actions | [API guide](API_DEMO_GUIDE.md), [evaluation](AI_EVALUATION_REPORT.md), [CI](https://github.com/Eugene156/retail-analytics-automation/actions/runs/41799269037) |
+
+Local CI passed 56 tests; hosted CI passed. Fresh-machine deployment/recovery,
+Postman GUI execution and broader evaluation remain unverified. External business
+connectors, OAuth, meaningful external MCP, BI, queueing and heavy observability
+are not claimed as implemented. Publishing this repository is not a product
+GitHub connector. No roadmap entry authorizes new implementation.
+
+## Original technology proposals
+
+The table below preserves the original broad learning plan. Stage labels are
+historical proposal labels, not current delivery assertions. In particular,
+Qwen3-Embedding-0.6B and FastMCP were candidates; the delivered embedding model is
+all-minilm:22m and no FastMCP framework implementation is claimed. Dependencies
+listed in this original plan must not be inferred to be installed or tested.
+
+<details>
+<summary>Historical candidate stack and laboratory admission rules</summary>
+
 The broad technology goal is preserved. **Core** is the first release; **extend** is a bounded later feature; **lab** is a separate experiment admitted by a concrete question. Nothing in this table is marked implemented. License notes are selection leads, not legal clearance for every version or commercial offering. Confirm exact versions/weights in G0 or before that profile is enabled.
 
 | # | Block | Components | Stage | Purpose / evidence | Free-edition constraint |
@@ -60,3 +93,5 @@ No JEV, paid n8n Git/environments/SSO/sharing, enterprise binary storage, manage
 ## Evidence status
 
 A component can be planned, documentation-verified, locally verified, blocked, or deferred. Promote a status only with dated version/environment/command/evidence. Published API pricing can change; a disabled optional connector must not trigger billing as fallback.
+
+</details>

@@ -1,5 +1,20 @@
 # Portfolio demo preparation (P6-B)
 
+## Historical preparation checklist
+
+The checklist below was prepared on 11 October 2026, before the final F2 site and
+published media. Recording and Human Approval acceptance subsequently completed;
+[README](../README.md) and the [published demo guide](DEMO_AND_GITHUB.md) describe
+the current result. Local CI passed 56 tests and [hosted CI passed](https://github.com/Eugene156/retail-analytics-automation/actions/runs/41799269037).
+Original pending statements and manual-run instructions below are historical
+planning records, not current blockers or permission to execute workflows.
+The delivered video was reviewed by representative 37-frame sampling, not the
+exhaustive frame review originally requested below. Retained publicly pending an
+owner decision; recommended future classification: EXCLUDE FROM PUBLICATION.
+
+<details>
+<summary>Original recording plan and safety checklist (historical)</summary>
+
 Prepared 2026-10-11. Recording/screenshots pending. Latest P6-A acceptance: 8/8,
 combining six earlier passes with two repaired Combined runs (not eight reruns).
 The owner manually confirmed P2#104 and P3#106. Fresh P1 decisions remain pending.
@@ -115,3 +130,5 @@ Receipts: [initial live validation](../evidence/p6_live_validation.json),
 [Combined repair](../evidence/p6_combined_repair.json),
 [prior P1 browser checks](../evidence/p12_human_approval.json).
 Next: owner review and recording preparation. P6-C has not started.
+
+</details>

@@ -1,6 +1,10 @@
 # AI demo evaluation report
 
-Offline replay date: 2026-10-11. No new LLM/workflow/Docker run.
+Offline replay date: 2026-10-11. The results below preserve that historical replay.
+Subsequent P6-A live validation completed eight scenarios across initial and repaired
+runs; see [initial evidence](../evidence/p6_live_validation.json) and
+[completed Combined checks](../evidence/p6_combined_repair.json). Original execution
+IDs and result rows below are unchanged. No new workflow was run for this update.
 
 ## Cases and actual replay results
 
@@ -74,7 +78,9 @@ this report. CI runs only offline pytest checks of replay and corrupted cases.
 Existing G0 evaluator design (fixed cases, explicit failures and denominators)
 is reused conceptually; it is not invoked because it performs live inference.
 
-Fresh live evaluation remains pending separate owner authorization. Manually run
+The following was the 11 October live-validation plan, subsequently exercised in
+the P6 evidence linked above. Any further live run requires new owner authorization.
+For an authorized future evaluation, manually run
 P2 KPI/quality/combined, P3 single/combined (including41 and GBP1270.03), and
 P4 KPI/cancellations/combined, one at a time. Use the eight case expectations
 in CASES, preserve failed runs, record model/workflow versions and elapsed time,

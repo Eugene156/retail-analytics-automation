@@ -83,7 +83,7 @@ Profiler: Python 3.12.14, openpyxl 3.1.5, `read_only=True`, `data_only=True`. Th
   --output evidence\private\g0\online_retail_ii_profile.json
 ```
 
-The aggregate raw profile is stored at `evidence/private/g0/online_retail_ii_profile.json`, which is ignored by Git. This published report contains no raw rows, Customer IDs, invoice IDs, or product descriptions.
+The aggregate raw profile is stored at private historical evidence (not published), which is ignored by Git. This published report contains no raw rows, Customer IDs, invoice IDs, or product descriptions.
 
 ## Remaining risk
 

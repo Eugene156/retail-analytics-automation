@@ -2,7 +2,7 @@
 
 ## Problem and stakeholders
 
-This is a reproducible analyst pilot. The historical retailer is not a client and has not provided stakeholder interviews or internal operating procedures.
+This is an illustrative analyst portfolio with verified local workflows; fresh-machine deployment is unverified. The historical retailer is not a client and has not provided stakeholder interviews or internal operating procedures.
 
 | Role | Need | Acceptance responsibility |
 | --- | --- | --- |
@@ -21,7 +21,12 @@ For a given archive snapshot and date range: load the records, check validity/co
 
 A request invokes n8n. Deterministic validation/SQL creates the evidence bundle and report. Optional AI drafts bounded commentary. A human checks the report, approves/rejects the exact revision, and the system publishes and audits the authorized action. Exceptions and unavailable services route to a defined recovery/manual path.
 
-Create actual AS-IS and TO-BE BPMN 2.0 files in v0.1. Include analyst/reviewer/system lanes, start/end events, quality and approval gateways, timeout, rejection and recovery. A Mermaid flowchart is an architecture aid, not evidence of BPMN compliance.
+Published models: [AS-IS BPMN](WP1_AS_IS.bpmn) and [TO-BE BPMN](WP1_TO_BE.bpmn),
+with [model notes and validation limits](WP1_PROCESS_MODELS.md). These illustrate
+an assumed owner-run process, not stakeholder-validated retailer operations.
+They were authored before the final F2 UI; they are not proof that every modeled
+recovery path ran. The [README Mermaid diagram](../README.md#architecture-and-stack)
+is an architecture aid, not evidence of BPMN compliance.
 
 ## User stories
 
@@ -42,10 +47,10 @@ Answer with actual observations or explicit scenario assumptions. Do not invent 
 
 ## Prioritisation and rules
 
-Core: correct data/metrics, source evidence, approval, recovery and measurements. Next: tools/RAG/MCP and relevant connectors. Experiments: alternate orchestrators/databases and heavy infrastructure.
+Delivered locally: SQL metrics/source evidence, bounded approval/publication, AI tools, MCP and RAG. Manual effort/savings measurement has not been performed; external business connectors and heavier platforms remain deferred. See the [requirement matrix](REQUIREMENTS_MATRIX.md) for partial and unverified subrequirements.
 
 Model decision rules in a small versioned table first: invalid evidence -> manual review; invalid model output -> repair once then manual review; changed/expired approval -> no action; duplicate event -> return existing case; uncertain write -> reconciliation. A later DMN artifact must agree with executable tests.
 
 ## Portfolio narrative
 
-Explain the business problem, requirements, design, implementation, reliability and measured effect in that order. List only demonstrated technologies as implemented skills. Describe the use of AI assistance and actual author contribution candidly.
+Explain the business problem, requirements, design, implementation, reliability and measurement limitations. No observed savings or retailer adoption is claimed. List only demonstrated technologies as implemented skills. Describe the use of AI assistance and actual author contribution candidly.

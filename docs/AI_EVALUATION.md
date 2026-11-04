@@ -1,5 +1,12 @@
 # AI and retrieval evaluation
 
+This is the original evaluation design, including proposed held-out, baseline and
+broader retrieval experiments. Those proposals are not measured results. The
+implemented offline eight-case replay and its limits are documented in the
+[evaluation report](AI_EVALUATION_REPORT.md); subsequent local live checks are in
+[initial evidence](../evidence/p6_live_validation.json) and
+[completed Combined checks](../evidence/p6_combined_repair.json).
+
 ## v0.1 commentary
 
 The model reads only bounded validated metrics and evidence. Evaluate schema validity, exact metric references, numerical consistency, unsupported claims, appropriate abstention and human usefulness. Compare its commentary with the deterministic template using the same report requirements. A model-generated judgment is a helper, not the only ground truth.

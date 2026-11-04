@@ -1,10 +1,12 @@
 # Publication selection manifest
 
-Status: proposed file set; nothing staged or published. Documentation refreshed
-on 4 November 2026. The original selection had 461 untracked candidates; the
-manifest, owner-approved LICENSE, six reviewed screenshots and optimized video
-add nine PUBLIC files. Counts include these approved additions, the explicit final selection correction below, not an inventory of other later files. No file is
-moved/deleted. PRIVATE and REVIEW paths are ignored as a staging safety barrier.
+Status: published inventory, verified against the 296-file initial public tree.
+F1-F6, MIT licensing, six screenshots and the demo MP4 are complete. Local CI
+passed 56 pytest tests and publication/static/YAML checks; the latest published
+README commit also passed [hosted CI](https://github.com/Eugene156/retail-analytics-automation/actions/runs/41799269037).
+This documentation repair is not committed or published yet. The exact inventory
+below remains unchanged: no PRIVATE/REVIEW file is newly approved or removed.
+Original source material remains on disk and excluded as previously selected.
 
 ## Selection policy
 
@@ -25,30 +27,24 @@ legacy fixtures/workflows, machine-specific deployment/recovery helpers, image
 pins and dependency/version/license inventories. Compose files and working paths
 are unchanged. Do not use git add -f to bypass their review status.
 
-## Required release decisions
+## Maintenance boundaries and remaining decisions
 
-- README now covers F1-F6, controlled F2 actions, historical AI evidence, local
-  navigation and verified/unverified boundaries. Its Mermaid section is the public
-  architecture overview. Legacy ARCHITECTURE.md remains REVIEW and is not linked;
-  no exception is needed merely to publish an architecture diagram.
-- SHA256SUMS needs scope/freshness review before any inclusion.
-- Owner approved MIT for original material: LICENSE carries copyright (c) 2026
-  Eugene156. THIRD_PARTY_NOTICES.md separates dataset/software/model rights and
-  describes actual data transformations. No runtime/model/raw-data redistribution
-  is intended; uncertain external snippets require explicit provenance review.
-- demo/*.yaml and g0/ need portability/image-build review. Local execution by a
-  reviewer is optional; do not claim a fresh-machine bootstrap was verified.
-- Confirm whether legacy operational docs/helpers are useful portfolio material.
-  Before releasing excluded runtime files or helper-dependent tests, check imports
-  and fixture references; this selection does not prove a clean checkout passes.
-- New F3-F6 UI tests exist but the hosted CI list still contains the earlier six
-  modules. Extending release checks requires a separate change.
-- Six reviewed screenshots and the exact optimized MP4 are selected below after
-  owner-authorized representative frame review. Private review frames remain excluded.
-- Run release static/selected CI checks against the final selected checkout before
-  committing. This manifest is not a commit instruction or a CI PASS claim.
-- Later files, including tests/test_portal_presentation.py, need explicit selection
-  review before inclusion. The snapshot counts below do not authorize new paths.
+- README is the current public architecture/scope overview; legacy architecture
+  material and checksum inventories remain withheld.
+- MIT approval and component/data attribution are complete. No model/runtime/raw
+  data redistribution is intended; uncertain copied snippets still require review.
+- Fresh-machine deployment/recovery remains unverified. Published workflows do not
+  provide a complete portable bootstrap; demo/G0 runtime profiles stay withheld.
+- All 296 selected files passed isolated local checks and hosted CI. The six
+  configured CI modules are unchanged. Current F2 presentation tests are PUBLIC
+  and retain their separate focused evidence; they are not part of lightweight CI.
+- Media is published. Representative video-frame review is not exhaustive privacy
+  verification; any future media requires a new scoped review.
+- Recommendation only: keep DEMO_AND_GITHUB.md public as the current review guide;
+  exclude the historical DEMO_VIDEO_CHECKLIST.md in a separately authorized change.
+  No tracked file, exclusion rule or allowlist entry is changed here.
+- Future files are not approved merely by directory membership. Changes to this
+  inventory, commits and further publication require explicit authorization.
 
 ## Remaining REVIEW groups and minimum exceptions
 
@@ -68,9 +64,9 @@ selection inventory; this documentation task does not approve or unignore them.
 | Legacy workflow/attempt-policy files | 3 | Keep withheld; current sanitized public workflows cover the showcase. |
 
 **Essential exceptions recommended now: none.** Local installation is optional for
-portfolio review. Before staging, verify selected-CI imports and fixture references
-in a clean selected checkout. If it exposes a missing dependency, propose that
-specific file for review rather than promoting a whole directory. Publication authorization remains separate; no PRIVATE path is eligible for an exception.
+portfolio review. The selected-checkout import/fixture review and configured CI checks passed.
+For future changes, review a specific missing dependency rather than promoting
+a whole withheld directory. Publication authorization remains separate; no PRIVATE path is eligible for an exception.
 
 Runtime/source exceptions identified by focused import review are withheld
 together with their dependent helpers/tests; no source or working paths changed.
@@ -118,11 +114,12 @@ safe-checkpoint groups also required withheld inputs and are excluded with their
 dependents. Exact moved paths appear in the REVIEW inventory below; originals
 remain on disk. No application module or configured CI test was removed.
 
-The six configured CI test modules and their Python imports remain in PUBLIC;
-CI commands and meaningful coverage are unchanged. Their existing offline evidence
-is distinct from a hosted GitHub run. pytest and PyYAML are unavailable in the
-current host runtime, so full configured CI cannot be rerun without an approved
-environment containing them. No packages were installed.
+The six configured CI modules and their imports remain PUBLIC. Following this
+selection correction, an authorized disposable Python environment installed only
+the pinned CI requirements. Publication/static/YAML checks and all 56 pytest tests
+passed against the exact selected set; hosted GitHub Actions subsequently passed.
+This resolves the earlier missing-pytest/PyYAML blocker without changing runtime
+behavior, test scope or dependency manifests.
 
 ## Counts
 

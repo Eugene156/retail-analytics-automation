@@ -1,11 +1,52 @@
-# Workflow exports
+# Published n8n workflow exports
 
-`wp4_manual_portal_attempts.json` is a separate13-node inactive/unpinned/null-plan/unbound manual v2 export over the isolated v4 attempt API, not a replacement of the older028 workflow. Fixed private host/GET/POST, actual execution ID/deterministic attempt keys, acknowledged committed reservation plus fresh GET before effect and GET before success. SQL caps three committed slots across reruns; workflow caps32 HTTP calls/run with bounded timed backoff/lease waits. Fifteen actual scenarios and sanitized n8n export roundtrip passed. No operator credential/recover, automatic approval/renewal/reset, main/M02 activation or crash/restore/browser/release pass. Policy/builder/check/deployment boundaries: `docs/WP4_N8N_DURABLE_ATTEMPTS.md`.
+These are sanitized source definitions for the existing local portfolio, not a
+self-contained installation. Real credentials, sessions, database state, raw
+execution history, deployment/recovery configuration and legacy WP4 attempt/
+publication templates remain withheld. A credential ID/name is a reference, not
+an authentication secret or a grant of authority.
 
-`wp4_manual_portal_publication.json` is a sanitized inactive/unpinned 13-node manual workflow for the **isolated new portal target**, with null action input/no credential refs. Operator must deliberately supply an already-approved action UUID/expected case/request/report hashes/stable acceptance key and bind a separate worker HTTP Header Auth credential. Fixed private test host only; reconcile GET before each of at most three POSTs and again before terminal success, no approval/renewal/physical export. Eight actual n8n/private HTTP/synthetic SQL scenarios and sanitized export roundtrip pass; main/M02 unchanged. Durable SQL attempts/dead-letter, browser/deployment/restore/release remain open. Commands/maintenance window/fault boundaries: `docs/WP4_N8N_PORTAL_PUBLICATION.md`. Earlier WP3 paragraphs below describe the unapproved draft workflow, not this test-only publication path.
+## Current portfolio definitions
 
-`wp3_manual_draft.json` is a sanitized, inactive manual-only workflow verified on n8n 2.40.0 with its matching external runner. It requests the frozen M02 report, handles at most three POST attempts, checks saved case identity and verifies the unapproved JSON artifact's exact binary SHA-256. It contains no credential references or secret values; bind one HTTP Header Auth credential to all three HTTP nodes after import. See `docs/WP3_MANUAL_DRAFT_WORKFLOW.md` for exact commands, input/output contract, CLI maintenance-window behavior, failures and limits.
+| Export | Workflow ID | Role |
+| --- | --- | --- |
+| [F2 creation entry](f2_create_report_staged.json) | p12-create-report-v1 | Manual trigger plus signed-webhook verification/admission gate before the existing report core. The filename records its staging origin; controlled F2 deployment subsequently completed. |
+| [Original P1.2 parent](p12_create_report.json) | p12-create-report-v1 | Earlier manual-only baseline. Same ID as the F2 definition: these are alternative versions, not separate workflows to import together. |
+| [Report core](p12_report_core.json) | p12-report-core-v2 | Guarded deterministic report/request creation, bounded request handling and exact draft/hash validation. |
+| [Human decision](p12_human_decision.json) | p12-human-decision-v1 | Reads the committed decision, publishes only an approved report and returns the actual result. Rejection may execute this workflow without publication. |
+| [P2 manual parent](p2_read_agent_demo.json) | p2-read-agent-demo-v1 | Manual question selection and core invocation. |
+| [P2 agent core](p2_read_agent_core.json) | p2-read-agent-core-v1 | Native AI Agent, local Ollama and Sales KPI/Data Quality read-only tools. |
+| [P3 manual parent](p3_mcp_agent_demo.json) | p3-mcp-agent-demo-v1 | Manual question selection for MCP analytics. |
+| [P3 MCP core](p3_mcp_agent_core.json) | p3-mcp-agent-core-v1 | AI Agent with supported MCP Client Tool and bounded result validation. |
+| [P4 manual parent](p4_rag_demo.json) | p4-rag-demo-v1 | Manual question selection for RAG. |
+| [P4 retrieval/agent core](p4_rag_core.json) | p4-rag-core-v1 | Embeds the question, searches pgvector before the agent, validates structured answers/source IDs and constructs citations. |
+| [P4 indexing](p4_rag_index.json) | p4-rag-index-v1 | Loads and chunks policy documents, creates real embeddings and stores pgvector chunks. This writes the corpus and is not a read-only smoke check. |
 
-The live exported workflow-defining fields matched this JSON after removing credential bindings. Two actual successful runs returned one case/revision; six actual HTTP test-double runs checked retries and rejections. There is no approval, publication, AI call, signed webhook, schedule, reusable sub-workflow or clean-instance import claim yet.
+## Retained historical examples
 
-The future lightweight demo must meet `docs/DEMO_AND_GITHUB.md`; no zero-credential/reduced demo or published raw GitHub URL is claimed. The current executable workflow requires the local WP2 API/data and a bound credential. Inspect exports for credentials, headers, account IDs and embedded private data before publication.
+- [P1.1 manual draft](p1_manual_report.json), ID raa-p1-demo-draft-v1.
+- [Earlier WP3 manual draft](wp3_manual_draft.json), ID raa-wp3-manual-draft-v1.
+
+These illustrate earlier deterministic report/draft work. They are not the current
+F2 creation entry; the old P1.1 token was revoked. Historical filenames/credential
+references are not instructions to restore obsolete credentials or run a workflow.
+
+## Evidence and portability
+
+[P1 approval evidence](../evidence/p12_human_approval.json) records the earlier
+P1.2 integration. [Initial P6 checks](../evidence/p6_live_validation.json) retain
+failed Combined runs; [later checks](../evidence/p6_combined_repair.json) record
+the two successful Combined runs, P2 #104 and P3 #106. Read those together rather
+than treating the initial failure receipt as current overall status.
+[P3 discovery](../evidence/p3_mcp_discovery.json) and
+[P4 RAG evidence](../evidence/p4_rag_runtime.json) support the protocol/retrieval
+claims. Current F2 owner acceptance and F1-F6 presentation are summarized in
+[README](../README.md#verified-tests-and-evidence); no new execution is claimed here.
+
+Importing a definition does not publish/activate it, bind credentials, provision
+services or prove a fresh-machine setup. Node URLs, trusted-source IPs and local
+service contracts require an authorized provisioned environment. Source exports
+are not a live export/certification of today's n8n database settings. Preserve
+caller, HMAC, owner and publication guards; never execute guarded cores directly
+as a substitute for the parent/owner flow. Use fresh local authority, and request
+separate authorization before any indexing, report creation, decision or delivery.
