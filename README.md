@@ -3,6 +3,10 @@
 A local portfolio showcase for AI and business automation: turn historical retail
 transactions into traceable reports, human decisions and controlled publication.
 
+**Published release:** 296 approved files, including six screenshots and the demo
+video. Local CI-equivalent checks passed with 56 pytest tests;
+[hosted GitHub Actions passed](https://github.com/Eugene156/retail-analytics-automation/actions/runs/41794810154).
+
 ![Retail Analytics Automation Overview](media/01-overview.png)
 
 ## Business problem
@@ -105,7 +109,7 @@ sequentially on memory-limited machines.
 | --- | --- | --- |
 | F2 acceptance | Create → owner Approve → PUBLISHED; separate Create → owner Reject → REJECTED | Real isolated local cases; receipt/hash and absence of rejected publication verified |
 | P2 / P3 / P4 live AI | Eight scenarios passed after two Combined repairs | Historical local runs; P2 #104 and P3 #106 also reviewed manually |
-| Portable engineering checks | 56 selected checks recorded during P5 | Historical local result; not a new test run or total test coverage |
+| Release CI verification | 56 pytest tests passed locally against the approved release set; hosted GitHub Actions passed | Selected offline checks; not total test coverage or live integration testing |
 | Latest F2 presentation/navigation changes | 14 focused checks passed on 4 November 2026 | Isolated rendering/authentication/CSRF/query regressions; subsequent live read-only checks and owner visual review |
 
 See the [live-validation receipt](evidence/p6_live_validation.json),
@@ -124,7 +128,7 @@ pull request and manual dispatch, with read-only repository permissions and a
 five-minute timeout. It runs publication/static checks and six selected pytest
 modules covering recovery policy, workflow helpers, publication privacy, offline
 AI evaluation, API artifacts and synthetic logging. Live inference and deployment
-are excluded. **Hosted CI has not run; automatic CD is not implemented.**
+are excluded. **Hosted GitHub Actions passed; automatic CD is not implemented.**
 
 Commands matching the current configuration:
 
@@ -135,8 +139,9 @@ python -m pytest -q tests/test_wp4_recovery_design.py tests/test_wp3_n8n_local.p
 python scripts/evaluate_ai_demo.py
 ```
 
-The final publication selection still needs a clean-checkout dependency check;
-these commands are not a claim that the selected release files have passed CI.
+The approved 296-file release set passed publication/static/YAML checks and all
+56 configured pytest tests in an isolated local environment. The published initial
+commit also passed the hosted GitHub Actions workflow linked above.
 
 [API guide](docs/API_DEMO_GUIDE.md), [OpenAPI projection](docs/openapi_demo.json),
 [Postman collection](docs/postman_collection.json) and
@@ -157,7 +162,7 @@ python -m api.observability --demo
 
 ## Screenshots and video
 
-Six screenshots have been visually reviewed for visible secrets and private information:
+Six published screenshots have been visually reviewed for visible secrets and private information:
 
 | Section | Screenshot |
 | --- | --- |
@@ -175,15 +180,15 @@ The owner reports independent review of 37 distinct frames sampled sequentially
 at 3-second intervals across the video. All six sections are visible; no passwords
 or authentication tokens were identified in those frames. Demo request IDs and
 report hashes are visible. This is representative sampling, not exhaustive
-frame-by-frame privacy verification. Hosted playback and GitHub publication remain
-unverified/pending.
+frame-by-frame privacy verification. Screenshots and the demo video are published;
+hosted video playback has not been verified.
 
 ## Known limitations and release boundaries
 
 - This is a local portfolio demonstration, not a production service. Current
   website AI results are saved evidence, not fresh availability guarantees.
-- Hosted CI, fresh-machine bootstrap and Postman GUI use remain unverified.
-  The final selected checkout must be validated before the first commit.
+- Fresh-machine bootstrap and Postman GUI use remain unverified. Local and hosted
+  CI success does not establish fresh-machine deployment or recovery readiness.
 - Fixed Docker IP allowlisting remains a reliability improvement; container address
   changes can interrupt publication delivery. Uncertain outcomes require durable
   reconciliation before retrying.
