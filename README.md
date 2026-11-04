@@ -1,25 +1,36 @@
 # Retail Analytics Automation
 
-A local portfolio showcase for AI and business automation: turn historical retail
-transactions into traceable reports, human decisions and controlled publication.
+Retail reporting needs reliable calculations, explainable analysis and control
+over what gets published. This project turns historical transactions into
+SQL-validated reports, adds AI-assisted analysis through read-only tools, MCP and
+RAG, and keeps publication behind an explicit human decision.
 
-**Published release:** 296 approved files, including six screenshots and the demo
-video. Local CI-equivalent checks passed with 56 pytest tests;
-[hosted GitHub Actions passed](https://github.com/Eugene156/retail-analytics-automation/actions/runs/41794810154).
+Built as an AI / Business Automation Specialist portfolio, it combines a six-page
+local website with working n8n, FastAPI, PostgreSQL and Ollama workflows. Human
+Approval supports controlled local actions; the AI, MCP and RAG pages present
+results from verified historical executions. Reviewers can explore the video,
+screenshots, source and evidence without installing the system.
+
+**[Watch the demo video](media/Retail_Analytics_Automation_Demo_GitHub.mp4)**
+— 1 minute 51 seconds · MP4 · 3.98 MiB.
 
 ![Retail Analytics Automation Overview](media/01-overview.png)
 
-## Business problem
+**Published repository:** 296 approved files, including six screenshots and the
+video. Local CI-equivalent checks passed with **56 pytest tests**;
+[hosted GitHub Actions passed](https://github.com/Eugene156/retail-analytics-automation/actions/runs/41794810154).
 
-Retail analysis needs more than a generated answer. Sales calculations must be
-consistent, cancellation rows must be distinguished from data-quality errors, and
-published reports must match the version a person reviewed. This project combines
-SQL-owned facts, bounded AI tools, document retrieval and explicit human approval
-in one small local website.
+## Key Capabilities
 
-The business context is an analyst exercise over historical data. No production
-adoption, measured time savings or ROI is claimed. Reviewers can assess the code,
-architecture and evidence without installing the system.
+- **Reliable retail reporting:** PostgreSQL/SQL owns KPI calculations, row
+  classification and precise money arithmetic.
+- **AI-assisted analysis:** an n8n AI Agent selects bounded read-only tools for
+  sales, data quality or a combined question.
+- **MCP integration:** native MCP client/server discovery and analytics tool calls.
+- **Grounded answers:** local embeddings and pgvector retrieval supply policy
+  context, validated source IDs and exact citations.
+- **Human-controlled publication:** authenticated review binds approval to the
+  exact report; durable admission, outbox and receipt checks guard delivery.
 
 ## Six implemented website sections
 
@@ -81,45 +92,45 @@ tool responses, not unsupported model prose.
 
 ## Local demonstration
 
-These URLs refer to an **already provisioned owner environment**, not a public
-hosted demo. Fresh-machine setup has not been verified. Workflow templates alone
-do not provision data, credentials, database permissions or services.
+The interactive website is local-only. These addresses are for an **already
+provisioned owner environment**; they are not public demo links. Use the sidebar
+or enter the relevant address:
 
-1. Open [Overview](http://127.0.0.1:18090/overview) and use the sidebar.
-2. Open [Human Approval](http://127.0.0.1:18082/portal/f2). Sign in manually through
-   the protected owner portal. Review existing requests without creating state.
-   A new Create/Approve/Reject demonstration requires explicit owner authorization;
-   publication is restricted to the isolated local target.
-3. In [AI Agent](http://127.0.0.1:18090/overview#ai-agent),
-   [MCP Analytics](http://127.0.0.1:18090/overview#mcp-analytics) and
-   [Knowledge Assistant](http://127.0.0.1:18090/overview#knowledge-assistant),
-   select a saved scenario, read the answer, then expand its tool/source evidence.
-4. Open [API & CI](http://127.0.0.1:18090/overview#api-ci) for API examples and
-   developer artifacts. [n8n](http://127.0.0.1:15690) provides authenticated
-   workflow/execution inspection; opening it does not require running a workflow.
+| Page | Local URL |
+| --- | --- |
+| Overview | `http://127.0.0.1:18090/overview` |
+| Human Approval | `http://127.0.0.1:18082/portal/f2` |
+| AI Agent | `http://127.0.0.1:18090/overview#ai-agent` |
+| MCP Analytics | `http://127.0.0.1:18090/overview#mcp-analytics` |
+| Knowledge Assistant | `http://127.0.0.1:18090/overview#knowledge-assistant` |
+| API & CI | `http://127.0.0.1:18090/overview#api-ci` |
+| n8n workflow inspection | `http://127.0.0.1:15690` |
 
-Never include owner tokens, credentials, raw execution exports or private runtime
-files in recordings or commits. P2 API and P3 MCP currently use detached processes
-that may need restoration after their containers stop. Run local model work
-sequentially on memory-limited machines.
+Select scenarios to inspect saved answers and expand tool/source evidence.
+Human Approval requires manual owner sign-in; new Create/Approve/Reject actions
+require owner authorization and publish only to the isolated local target.
+Keep credentials, tokens and raw execution exports out of recordings and commits.
+
+P2 API and P3 MCP use detached processes that may need restoration after their
+containers stop. Run local model work sequentially on memory-limited machines.
 
 ## Verified tests and evidence
 
 | Scope | Recorded result | Qualification |
 | --- | --- | --- |
 | F2 acceptance | Create → owner Approve → PUBLISHED; separate Create → owner Reject → REJECTED | Real isolated local cases; receipt/hash and absence of rejected publication verified |
-| P2 / P3 / P4 live AI | Eight scenarios passed after two Combined repairs | Historical local runs; P2 #104 and P3 #106 also reviewed manually |
+| P2 / P3 / P4 live AI | Eight locally verified scenarios passed | Historical local runs; P2 #104 and P3 #106 also reviewed manually |
 | Release CI verification | 56 pytest tests passed locally against the approved release set; hosted GitHub Actions passed | Selected offline checks; not total test coverage or live integration testing |
 | Latest F2 presentation/navigation changes | 14 focused checks passed on 4 November 2026 | Isolated rendering/authentication/CSRF/query regressions; subsequent live read-only checks and owner visual review |
 
 See the [live-validation receipt](evidence/p6_live_validation.json),
-[Combined repair receipt](evidence/p6_combined_repair.json),
+[tool-fact validation evidence](evidence/p6_combined_repair.json),
 [AI evaluation methodology](docs/AI_EVALUATION.md) and
 [evaluation report](docs/AI_EVALUATION_REPORT.md).
-The evaluation report replays eight reviewed historical cases with explicit
-Tool Selection Accuracy, bounded Factual Correctness, Citation Validity, Schema
-Compliance and Pass Rate denominators. N/A is excluded. These results are a small
-retrospective diagnostic set, not a general model-quality benchmark.
+Offline evaluation replays eight reviewed cases using Tool Selection Accuracy,
+bounded Factual Correctness, Citation Validity, Schema Compliance and Pass Rate.
+These checks assess a small development set, not general model accuracy; the
+linked report explains the criteria, denominators and limitations.
 
 ## CI and developer tools
 
@@ -128,7 +139,7 @@ pull request and manual dispatch, with read-only repository permissions and a
 five-minute timeout. It runs publication/static checks and six selected pytest
 modules covering recovery policy, workflow helpers, publication privacy, offline
 AI evaluation, API artifacts and synthetic logging. Live inference and deployment
-are excluded. **Hosted GitHub Actions passed; automatic CD is not implemented.**
+are excluded; automatic CD is not implemented.
 
 Commands matching the current configuration:
 
@@ -139,9 +150,8 @@ python -m pytest -q tests/test_wp4_recovery_design.py tests/test_wp3_n8n_local.p
 python scripts/evaluate_ai_demo.py
 ```
 
-The approved 296-file release set passed publication/static/YAML checks and all
-56 configured pytest tests in an isolated local environment. The published initial
-commit also passed the hosted GitHub Actions workflow linked above.
+The approved file set passed publication/static/YAML validation and all 56 pytest
+tests locally, followed by the successful hosted run linked above.
 
 [API guide](docs/API_DEMO_GUIDE.md), [OpenAPI projection](docs/openapi_demo.json),
 [Postman collection](docs/postman_collection.json) and
@@ -160,9 +170,26 @@ propagated trace. A synthetic example needs no running service:
 python -m api.observability --demo
 ```
 
-## Screenshots and video
+## Interface highlights
 
-Six published screenshots have been visually reviewed for visible secrets and private information:
+<details>
+<summary>Human Approval, AI Agent and Knowledge Assistant</summary>
+
+**Human Approval — controlled report creation and owner review**
+
+![Human Approval page](media/02-human-approval.png)
+
+**AI Agent — scenario selection and verified tool evidence**
+
+![AI Agent page](media/03-ai-agent.png)
+
+**Knowledge Assistant — grounded answers and supporting sources**
+
+![Knowledge Assistant page](media/05-knowledge-assistant.png)
+
+</details>
+
+All six screenshots are available individually:
 
 | Section | Screenshot |
 | --- | --- |
@@ -173,22 +200,17 @@ Six published screenshots have been visually reviewed for visible secrets and pr
 | F5 Knowledge Assistant | [Knowledge Assistant](media/05-knowledge-assistant.png) |
 | F6 API & CI | [API & CI](media/06-api-ci.png) |
 
-[Watch or download the demonstration video](media/Retail_Analytics_Automation_Demo_GitHub.mp4)
-(MP4, 1 minute 51 seconds, 3.98 MiB).
-
-The owner reports independent review of 37 distinct frames sampled sequentially
-at 3-second intervals across the video. All six sections are visible; no passwords
-or authentication tokens were identified in those frames. Demo request IDs and
-report hashes are visible. This is representative sampling, not exhaustive
-frame-by-frame privacy verification. Screenshots and the demo video are published;
-hosted video playback has not been verified.
+Media privacy review covered all six screenshots and, as reported by the owner,
+37 distinct video frames sampled every three seconds. No passwords or tokens were
+identified in those samples; demo request IDs and report hashes are visible.
+Sampling was representative, not exhaustive. Hosted video playback is unverified.
 
 ## Known limitations and release boundaries
 
-- This is a local portfolio demonstration, not a production service. Current
-  website AI results are saved evidence, not fresh availability guarantees.
-- Fresh-machine bootstrap and Postman GUI use remain unverified. Local and hosted
-  CI success does not establish fresh-machine deployment or recovery readiness.
+- This is a portfolio demonstration, with no production adoption, measured business
+  savings or ROI claimed. Execution evidence does not guarantee current availability.
+- Fresh-machine deployment/recovery and Postman GUI use remain unverified.
+  Workflow imports do not provision data, credentials, permissions or services.
 - Fixed Docker IP allowlisting remains a reliability improvement; container address
   changes can interrupt publication delivery. Uncertain outcomes require durable
   reconciliation before retrying.
